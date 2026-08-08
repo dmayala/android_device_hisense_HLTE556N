@@ -1,0 +1,39 @@
+# Hisense A9 (HLTE556N) — TWRP fstab
+#
+# Partition labels verified against rawprogram*.xml and
+# Stock/COM4_PartitionsList.xml. Logical partitions live in `super`
+# (group qti_dynamic_partitions_a/_b) and take `logical;slotselect`.
+#
+# mount point       fstype    device                                        flags
+
+# Logical partitions in super
+/system             ext4      system                                        flags=display="System";logical;slotselect
+/system_ext         ext4      system_ext                                    flags=display="System ext";logical;slotselect
+/vendor             ext4      vendor                                        flags=display="Vendor";logical;slotselect
+/product            ext4      product                                       flags=display="Product";logical;slotselect
+
+# Data and metadata
+# NOTE: FBE with hardware-wrapped keys + dm-default-key metadata encryption.
+# Decryption is expected to fail — the SD card below is the working medium.
+/data               f2fs      /dev/block/bootdevice/by-name/userdata        flags=display="Data";backup=1;wipeingui
+/metadata           ext4      /dev/block/bootdevice/by-name/metadata        flags=display="Metadata";backup=1
+/cache              ext4      /dev/block/bootdevice/by-name/cache           flags=display="Cache";backup=1;wipeingui
+/persist            ext4      /dev/block/bootdevice/by-name/persist         flags=display="Persist";backup=1
+
+# Slotted images
+/boot               emmc      /dev/block/bootdevice/by-name/boot            flags=display="Boot";slotselect;backup=1
+/recovery           emmc      /dev/block/bootdevice/by-name/recovery        flags=display="Recovery";slotselect;backup=1
+/dtbo               emmc      /dev/block/bootdevice/by-name/dtbo            flags=display="DTBO";slotselect;backup=1
+/vbmeta             emmc      /dev/block/bootdevice/by-name/vbmeta          flags=display="Vbmeta";slotselect;backup=1
+/vbmeta_system      emmc      /dev/block/bootdevice/by-name/vbmeta_system   flags=display="Vbmeta system";slotselect;backup=1
+/modem              emmc      /dev/block/bootdevice/by-name/modem           flags=display="Modem";slotselect;backup=1
+
+# Whole super, for imaging
+/super              emmc      /dev/block/bootdevice/by-name/super           flags=display="Super";backup=1
+
+# Misc
+/misc               emmc      /dev/block/bootdevice/by-name/misc            flags=display="Misc"
+
+# Removable storage — primary working medium for this device
+/external_sd        vfat      /dev/block/mmcblk1p1                          flags=display="MicroSD";storage;wipeingui;removable
+/usb_otg            vfat      /dev/block/sda1                               flags=display="USB-OTG";storage;wipeingui;removable
