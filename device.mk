@@ -14,18 +14,21 @@ AB_OTA_POSTINSTALL_CONFIG += \
     POSTINSTALL_OPTIONAL_system=true
 
 # Boot control HAL
+#
+# NOTE: twrpdtgen emits PRODUCT_STATIC_BOOT_CONTROL_HAL, which was removed in
+# Android 12 and hard-errors in build/make:
+#   "PRODUCT_STATIC_BOOT_CONTROL_HAL is obsolete. Use shared library module
+#    instead."  (see build/make Changes.md)
+# The replacement is to ship the HAL as a normal module plus its .recovery
+# variant, so it is present in the recovery ramdisk for A/B slot switching.
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl \
+    android.hardware.boot@1.0-impl.recovery \
     android.hardware.boot@1.0-service
 
 PRODUCT_PACKAGES += \
-    bootctrl.bengal
-
-PRODUCT_STATIC_BOOT_CONTROL_HAL := \
     bootctrl.bengal \
-    libgptutils \
-    libz \
-    libcutils
+    bootctrl.bengal.recovery
 
 PRODUCT_PACKAGES += \
     otapreopt_script \
