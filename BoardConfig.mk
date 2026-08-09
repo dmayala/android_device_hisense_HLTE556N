@@ -149,8 +149,20 @@ PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 # TWRP Configuration
 TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
-TW_SCREEN_BLANK_ON_BOOT := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
+
+# Never blank the panel.
+#
+# MEASURED 2026-08-09: with TW_SCREEN_BLANK_ON_BOOT (set by twrpdtgen) TWRP
+# powers the display off ~60 s after boot and never brings it back without
+# input:
+#     t=08s..56s  enabled=enabled   brightness=200
+#     t=64s       enabled=disabled  brightness=0
+# Stock recovery holds enabled/200 indefinitely. On E Ink the last frame
+# persists after the CRTC is disabled, so a blanked TWRP looks identical to a
+# running one -- this cost hours of misdiagnosis. Keep the pipeline up.
+TW_NO_SCREEN_BLANK := true
+TW_NO_SCREEN_TIMEOUT := true
 TW_USE_TOOLBOX := true
 TW_INCLUDE_REPACKTOOLS := true
 TW_INCLUDE_FASTBOOTD := true
@@ -184,16 +196,29 @@ TW_INCLUDE_CRYPTO_FBE := true
 TW_INCLUDE_LIBRESETPROP := true
 TW_INCLUDE_RESETPROP := true
 
-# Drive the display with the legacy drmModeSetCrtc() path instead of the atomic
-# plane setup.
+# Framebuffer handling for the striped-bands failure.
 #
-# WHY: minuitwrp's atomic path sets SRC_*/CRTC_* plane properties by hand and
-# this panel's driver mis-programs the plane from them -- output lands as
-# scattered striped bands. Stock AOSP recovery drives the SAME panel correctly
-# using legacy KMS. Both use DRM (the device has no ADF at all) and both see the
-# same single 448x829 mode on card0-DSI-1 against an 824x1648 panel.
+# SYMPTOM (photo, 2026-08-09): TWRP's output is a patch of fine vertical
+# stripes and grey blocks covering only part of the panel; the rest still shows
+# the boot splash retained by the E Ink. TWRP is NOT rendering small -- its log
+# proves it scales the 1080x1920 theme to fill the whole surface:
+#     width: 448, height: 829
+#     I:Scaling theme width 0.414815x and height 0.431771x   (448/1080, 829/1920)
+# So the pixels are drawn correctly and then land wrong: a stride/buffering
+# fault, not a mode, scaling or E Ink fault.
 #
-# Requires the FORKED bootable/recovery, so build with
-#   MANIFEST_URL=https://github.com/dmayala/platform_manifest_twrp_aosp
-# Without that fork this flag is simply ignored.
-TW_DRM_LEGACY_MODESET := true
+# RULED OUT by measuring stock recovery live (it renders full panel, crisp):
+#   - same single mode          448x829x85x40079vid
+#   - same EPD state            epd_display_mode=3, epd_connect=0, waveform=0
+#   - same bridge I2C failure   tc358767_send_init_cmd ret=-107
+#     (Android logs this on EVERY display power-on and renders perfectly)
+# The panel expands a 448x829 surface to 824x1648 by itself; nothing about the
+# EPD needs configuring from recovery.
+#
+# Both flags below reach the compiler via vendor/twrp EXPORT_TO_SOONG
+# (recovery_graphics_force_single_buffer / _use_linelength) -- unlike
+# TW_DRM_LEGACY_MODESET, which is NOT in that list and was silently discarded,
+# so the build that "tested" it never contained it. Verify any graphics flag is
+# in vendor/twrp/config/BoardConfigSoong.mk before trusting a build.
+RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
+RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
