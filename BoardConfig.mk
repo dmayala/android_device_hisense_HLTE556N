@@ -149,15 +149,13 @@ PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 # TWRP Configuration
 TW_THEME := portrait_hdpi
 
-# Monochrome theme -- this is an E Ink panel, so the stock theme's blues and
-# greys collapse into mush. Ryogo-X/twrp_monochrome_portrait_hdpi_theme is
-# pure black/white and declares <resolution width="1080" height="1920"/>, the
-# same base as portrait_hdpi, so it uses the scaling that already renders
-# correctly here (0.762963x / 0.858333x -> 824x1648).
+# The monochrome E Ink theme lives in the bootable/recovery FORK, as
+# gui/theme/portrait_hdpi (plus gui/theme/common/portrait.xml), NOT here.
 #
-# TW_CUSTOM_THEME *is* in vendor/twrp's EXPORT_TO_SOONG, so unlike some flags
-# it genuinely takes effect. Soong copies the whole directory.
-TW_CUSTOM_THEME := device/hisense/HLTE556N/theme
+# TW_CUSTOM_THEME cannot be used: its implementation copies exactly one FILE
+# (copyCustomTheme -> copyFile with path.Base), so pointing it at a directory
+# silently leaves the stock theme installed. Verified on-device by md5 --
+# /twres/images/*.png still matched stock after a build with TW_CUSTOM_THEME set.
 
 TW_EXTRA_LANGUAGES := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
