@@ -36,4 +36,9 @@
 
 # Removable storage — primary working medium for this device
 /external_sd        vfat      /dev/block/mmcblk1p1                          flags=display="MicroSD";storage;wipeingui;removable
-/usb_otg            vfat      /dev/block/sda1                               flags=display="USB-OTG";storage;wipeingui;removable
+# USB-OTG. twrpdtgen guessed /dev/block/sda1 -- that is WRONG and dangerous on
+# this device: sda..sdf are the six internal UFS LUNs, so sda1 is the `ssd`
+# partition and sdb1 is `xbl_a` (the bootloader). With storage;wipeingui that
+# put "format the internal ssd partition" in TWRP's Wipe menu labelled
+# "USB-OTG". An attached OTG drive enumerates after the LUNs, i.e. sdg.
+/usb_otg            vfat      /dev/block/sdg1                               flags=display="USB-OTG";storage;wipeingui;removable

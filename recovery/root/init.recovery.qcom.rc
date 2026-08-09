@@ -36,3 +36,15 @@ on property:ro.boot.usbcontroller=*
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+
+# Keymaster version for /data decryption.
+#
+# TWRP reads this (TW_KEYMASTER_VERSION_PROP = "keymaster_ver") when it cannot
+# find the HAL version in the vendor manifest, which is what happened here:
+#   Keymaster_Ver::Unable to find vendor manifest ... and no default value set
+#   Keymaster_Ver::Using keymaster version '' for decryption
+#
+# 4.0 is measured from the device's own /vendor/etc/vintf/manifest.xml:
+#   android.hardware.keymaster @4.0::IKeymasterDevice/default
+on init
+    setprop keymaster_ver 4.0

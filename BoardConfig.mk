@@ -148,6 +148,17 @@ PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 
 # TWRP Configuration
 TW_THEME := portrait_hdpi
+
+# Monochrome theme -- this is an E Ink panel, so the stock theme's blues and
+# greys collapse into mush. Ryogo-X/twrp_monochrome_portrait_hdpi_theme is
+# pure black/white and declares <resolution width="1080" height="1920"/>, the
+# same base as portrait_hdpi, so it uses the scaling that already renders
+# correctly here (0.762963x / 0.858333x -> 824x1648).
+#
+# TW_CUSTOM_THEME *is* in vendor/twrp's EXPORT_TO_SOONG, so unlike some flags
+# it genuinely takes effect. Soong copies the whole directory.
+TW_CUSTOM_THEME := device/hisense/HLTE556N/theme
+
 TW_EXTRA_LANGUAGES := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 
@@ -174,11 +185,41 @@ TW_BRIGHTNESS_PATH := /sys/class/backlight/panel0-backlight/brightness
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 200
 
-# Crypto — expected to FAIL on this device (wrapped-key FBE + dm-default-key,
-# and stock recovery ships no keymaster/gatekeeper to lift). Left on so the
-# failure is visible in the log; the SD card is the intended working medium.
+# Crypto / /data decryption.
+#
+# Device config (measured from /vendor/build.prop):
+#   ro.crypto.volume.metadata.method=dm-default-key
+#   ro.crypto.dm_default_key.options_format.version=2
+#   ro.crypto.volume.filenames_mode=aes-256-cts
+#
+# The first attempt failed for a specific, fixable reason -- not because
+# decryption is impossible. From the recovery log:
+#   I:Separate manifest doesn't exist for 'android.hardware.keymaster'
+#   I:Keymaster_Ver::Unable to find vendor manifest ... and no default value set
+#   I:Keymaster_Ver::Using keymaster version '' for decryption
+#   Could not mount /data and unable to find crypto footer.
+# TWRP could not determine which keymaster HAL to start, so it fell back to
+# looking for an FDE crypto footer that does not exist on an FBE device.
+#
+# Fixes:
+#  1. TW_INCLUDE_FBE_METADATA_DECRYPT -- adds the dm-default-key metadata
+#     decryption path (libkeymint_support, libgatekeeper_aidl,
+#     libkeystoreinfo). Without it TWRP only ever tries the FDE footer.
+#  2. keymaster_ver=4.0 set in recovery/root/init.recovery.qcom.rc. The device's
+#     own /vendor manifest declares
+#     android.hardware.keymaster@4.0::IKeymasterDevice/default, and
+#     partitionmanager.cpp falls back to this property (TW_KEYMASTER_VERSION_PROP)
+#     when the manifest lookup fails.
+#
+# NOTE: both flags are consumed in bootable/recovery/Android.mk (Make), NOT via
+# Soong, so they do NOT need a vendor/twrp EXPORT_TO_SOONG entry.
+#
+# STILL UNCERTAIN: this device uses hardware-wrapped keys. If TWRP's vold code
+# cannot handle wrappedkey_v0 here, decryption will still fail -- but it will
+# fail further along, with a different and more informative error.
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
 
 # MUST be set explicitly alongside TW_INCLUDE_CRYPTO.
 #
