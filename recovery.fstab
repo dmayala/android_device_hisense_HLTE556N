@@ -15,7 +15,19 @@
 # Data and metadata
 # NOTE: FBE with hardware-wrapped keys + dm-default-key metadata encryption.
 # Decryption is expected to fail — the SD card below is the working medium.
-/data               f2fs      /dev/block/bootdevice/by-name/userdata        flags=display="Data";backup=1;wipeingui
+# /data -- FBE v2 + dm-default-key metadata encryption, hardware-wrapped keys.
+#
+# The crypto flags below are NOT optional decoration. partition.cpp picks the
+# decryption path on `Key_Directory.empty()`: with no keydirectory= flag TWRP
+# takes the legacy FDE branch, calls cryptfs_check_footer(), finds no footer on
+# an FBE device and gives up with
+#   "Could not mount /data and unable to find crypto footer."
+# which is exactly what happened before these flags were added.
+#
+# Values copied verbatim from the device's own /vendor/etc/fstab.default
+# (androidboot.fstab_suffix=default -> the UFS variant, hence
+# inlinecrypt_optimized rather than emmc_optimized).
+/data               f2fs      /dev/block/bootdevice/by-name/userdata        flags=display="Data";backup=1;wipeingui;fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized+wrappedkey_v0;metadata_encryption=aes-256-xts:wrappedkey_v0;keydirectory=/metadata/vold/metadata_encryption;wrappedkey
 /metadata           ext4      /dev/block/bootdevice/by-name/metadata        flags=display="Metadata";backup=1
 /cache              ext4      /dev/block/bootdevice/by-name/cache           flags=display="Cache";backup=1;wipeingui
 /persist            ext4      /dev/block/bootdevice/by-name/persist         flags=display="Persist";backup=1

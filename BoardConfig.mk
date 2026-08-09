@@ -202,9 +202,10 @@ TW_DEFAULT_BRIGHTNESS := 200
 # looking for an FDE crypto footer that does not exist on an FBE device.
 #
 # Fixes:
-#  1. TW_INCLUDE_FBE_METADATA_DECRYPT -- adds the dm-default-key metadata
-#     decryption path (libkeymint_support, libgatekeeper_aidl,
-#     libkeystoreinfo). Without it TWRP only ever tries the FDE footer.
+#  1. TW_INCLUDE_FBE_METADATA_DECRYPT -- kept for clarity, but note it is a
+#     NO-OP: Android.mk adds -DTW_INCLUDE_FBE_METADATA_DECRYPT unconditionally
+#     inside `ifeq ($(TW_INCLUDE_CRYPTO), true)`, so the code was always built.
+#     The real blocker was the fstab (see below).
 #  2. keymaster_ver=4.0 set in recovery/root/init.recovery.qcom.rc. The device's
 #     own /vendor manifest declares
 #     android.hardware.keymaster@4.0::IKeymasterDevice/default, and
@@ -214,9 +215,14 @@ TW_DEFAULT_BRIGHTNESS := 200
 # NOTE: both flags are consumed in bootable/recovery/Android.mk (Make), NOT via
 # Soong, so they do NOT need a vendor/twrp EXPORT_TO_SOONG entry.
 #
-# STILL UNCERTAIN: this device uses hardware-wrapped keys. If TWRP's vold code
-# cannot handle wrappedkey_v0 here, decryption will still fail -- but it will
-# fail further along, with a different and more informative error.
+#  3. THE ACTUAL BLOCKER: the crypto flags on /data in recovery.fstab.
+#     partition.cpp chooses the decryption path on `Key_Directory.empty()`.
+#     With no `keydirectory=` flag TWRP took the legacy FDE branch, looked for
+#     a crypto footer that cannot exist on an FBE device, and gave up. The
+#     flags now mirror the device's own /vendor/etc/fstab.default.
+#
+# TWRP does support hardware-wrapped keys -- partition.cpp parses
+# `metadata_encryption=aes-256-xts:wrappedkey_v0` and has a `wrappedkey` flag.
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
