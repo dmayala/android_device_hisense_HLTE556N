@@ -48,5 +48,12 @@ PRODUCT_PACKAGES += \
 # The backend probes for this file at runtime: if it is missing, minui simply
 # falls back to DRM. Renamed from librecovery_ui.so to avoid colliding with
 # AOSP's library of that name.
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/prebuilt/libhmct_epd.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libhmct_epd.so
+# NOTE: this must NOT be a PRODUCT_COPY_FILES entry. build/make rejects ELF
+# files there:
+#   "found ELF prebuilt in PRODUCT_COPY_FILES, use cc_prebuilt_binary /
+#    cc_prebuilt_library_shared instead"
+# It is installed by the BUILD_PREBUILT rule in Android.mk instead, which also
+# lets us disable the ELF dependency check (the library's DT_NEEDED entries are
+# satisfied at runtime inside the recovery ramdisk, not at build time).
+PRODUCT_PACKAGES += \
+    libhmct_epd
