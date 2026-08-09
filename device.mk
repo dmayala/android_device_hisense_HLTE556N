@@ -67,3 +67,13 @@ PRODUCT_PACKAGES += \
 # PRODUCT_COPY_FILES is fine here.
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/system/bin/rebootsystem.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/rebootsystem.sh
+
+# libion is required by the vendor keymaster HAL and is NOT in TWRP's ramdisk
+# (stock recovery's ramdisk does ship it). Without it the HAL cannot start:
+#   CANNOT LINK EXECUTABLE ".../android.hardware.keymaster@4.1-service-qti":
+#   library "libion.so" not found: needed by /vendor/lib64/libkeymasterdeviceutils.so
+# and keystore2 then crash-loops, so /data never decrypts. Verified live on
+# device: pushing libion.so let the HAL start and keystore2 go from
+# "restarting" to "running".
+PRODUCT_PACKAGES += \
+    libion

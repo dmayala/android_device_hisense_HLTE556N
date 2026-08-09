@@ -48,3 +48,39 @@ on fs
 #   android.hardware.keymaster @4.0::IKeymasterDevice/default
 on init
     setprop keymaster_ver 4.0
+
+# Vendor keymaster + gatekeeper HALs, needed to decrypt /data.
+#
+# WHY: /data is FBE v2 with dm-default-key metadata encryption and
+# hardware-wrapped keys. The keys live in the TEE; vold must ask the vendor
+# keymaster HAL to unwrap them. TWRP does not parse /vendor/etc/init/*.rc, so
+# these services are invisible to it and nothing ever starts them -- keystore2
+# then crash-loops (init.svc.keystore2=restarting) and the metadata decrypt
+# quietly does nothing.
+#
+# Definitions copied verbatim from the device's own
+# /vendor/etc/init/android.hardware.{keymaster@4.1,gatekeeper@1.0}-service-qti.rc,
+# with seclabel added (TWRP runs everything as u:r:recovery:s0).
+#
+# TRIGGER: TWRP sets fstab.additional=1 immediately after mounting /vendor and
+# copying its fstab, which is before Decrypt_Data runs -- exactly the window we
+# need. /vendor cannot be mounted from init here because it is a logical
+# partition inside super and the dm devices are set up by TWRP, not init.
+# Once started the HAL keeps /vendor busy, which is harmless: TWRP logs
+# "Failed to unmount '/vendor' (Device or resource busy)" and carries on.
+
+service vendor.keymaster-4-1 /vendor/bin/hw/android.hardware.keymaster@4.1-service-qti
+    class early_hal
+    user system
+    group system drmrpc
+    seclabel u:r:recovery:s0
+
+service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti
+    class early_hal
+    user system
+    group system
+    seclabel u:r:recovery:s0
+
+on property:fstab.additional=1
+    start vendor.keymaster-4-1
+    start gatekeeper-1-0
