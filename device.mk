@@ -36,3 +36,17 @@ PRODUCT_PACKAGES += \
     update_engine \
     update_verifier \
     update_engine_sideload
+
+# Hisense E Ink prebuilt (extracted from stock recovery's librecovery_ui.so).
+#
+# This panel is NOT driven by DRM -- stock's own atomic commits fail exactly as
+# TWRP's do. Stock renders through a Hisense software TCON that streams E Ink
+# waveform frames, and that whole implementation is exported from this library,
+# so minuitwrp's graphics_hmct_epd backend dlopens it rather than
+# reimplementing waveform generation.
+#
+# The backend probes for this file at runtime: if it is missing, minui simply
+# falls back to DRM. Renamed from librecovery_ui.so to avoid colliding with
+# AOSP's library of that name.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/libhmct_epd.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libhmct_epd.so
