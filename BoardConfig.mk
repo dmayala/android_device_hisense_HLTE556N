@@ -183,3 +183,17 @@ TW_INCLUDE_CRYPTO_FBE := true
 # to out/.../system/lib64/ but never to out/.../recovery/root/system/lib64/.
 TW_INCLUDE_LIBRESETPROP := true
 TW_INCLUDE_RESETPROP := true
+
+# Drive the display with the legacy drmModeSetCrtc() path instead of the atomic
+# plane setup.
+#
+# WHY: minuitwrp's atomic path sets SRC_*/CRTC_* plane properties by hand and
+# this panel's driver mis-programs the plane from them -- output lands as
+# scattered striped bands. Stock AOSP recovery drives the SAME panel correctly
+# using legacy KMS. Both use DRM (the device has no ADF at all) and both see the
+# same single 448x829 mode on card0-DSI-1 against an 824x1648 panel.
+#
+# Requires the FORKED bootable/recovery, so build with
+#   MANIFEST_URL=https://github.com/dmayala/platform_manifest_twrp_aosp
+# Without that fork this flag is simply ignored.
+TW_DRM_LEGACY_MODESET := true
