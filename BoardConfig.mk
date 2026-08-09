@@ -75,8 +75,9 @@ BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 BOARD_KERNEL_IMAGE_NAME := Image
 
 # Kernel - prebuilt [MEASURED]
-# boot.img and recovery.img ship the IDENTICAL kernel (both 15,050,789 bytes),
-# so no kernel source is required.
+# kernel, dtb.img and dtbo.img are extracted from the DEVICE's own recovery_b
+# (kernel 15,047,394 bytes). Do not use the stock package's images -- the
+# device runs a different build despite reporting the same version prop.
 TARGET_FORCE_PREBUILT_KERNEL := true
 ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
@@ -85,6 +86,20 @@ BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 BOARD_INCLUDE_DTB_IN_BOOTIMG :=
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
 BOARD_KERNEL_SEPARATED_DTBO :=
+
+# Embed the recovery DTBO in the recovery image.
+#
+# WHY: builds 1 and 2 both produced images with `recovery_dtbo: size=0`, while
+# the device's own stock recovery_b has size=88722 at offset 26202112. Setting
+# BOARD_PREBUILT_DTBOIMAGE alone is NOT enough -- it builds dtbo.img as a
+# separate artifact and never passes it to mkbootimg, so the overlays that
+# adapt the device tree to this hardware were simply absent. Both of those
+# builds failed to boot with no splash and no adb, which is exactly how a
+# kernel with a mismatched device tree dies.
+#
+# Verify after building:
+#   dd if=recovery.img bs=1 skip=1632 count=4 | od -A none -t u4   # must be 88722
+BOARD_MKBOOTIMG_ARGS += --recovery_dtbo $(BOARD_PREBUILT_DTBOIMAGE)
 endif
 
 # Partitions [MEASURED]
