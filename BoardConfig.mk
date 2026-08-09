@@ -167,3 +167,19 @@ TW_DEFAULT_BRIGHTNESS := 200
 # failure is visible in the log; the SD card is the intended working medium.
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
+
+# MUST be set explicitly alongside TW_INCLUDE_CRYPTO.
+#
+# bootable/recovery/Android.mk has two separate conditionals:
+#   ifneq ($(TW_INCLUDE_LIBRESETPROP),)      -> LINKS the binary against it
+#   ifeq  ($(TW_INCLUDE_LIBRESETPROP), true) -> INSTALLS it (TWRP_REQUIRED_MODULES)
+#
+# TW_INCLUDE_CRYPTO enables the first but not reliably the second, so build 3
+# produced a recovery binary linked against a library that was never packaged:
+#   CANNOT LINK EXECUTABLE "/system/bin/recovery":
+#   library "libresetprop.so" not found: needed by main executable
+# The GUI therefore never started -- blank screen, while adb still worked
+# because adbd is a separate process. libresetprop.so was built and installed
+# to out/.../system/lib64/ but never to out/.../recovery/root/system/lib64/.
+TW_INCLUDE_LIBRESETPROP := true
+TW_INCLUDE_RESETPROP := true
