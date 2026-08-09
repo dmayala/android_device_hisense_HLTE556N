@@ -57,3 +57,13 @@ PRODUCT_PACKAGES += \
 # satisfied at runtime inside the recovery ramdisk, not at build time).
 PRODUCT_PACKAGES += \
     libhmct_epd
+
+# BCB-clearing hook for "Reboot System" from the TWRP UI.
+#
+# TWRP's rb_system path calls /system/bin/rebootsystem.sh but never clears the
+# bootloader control block itself, so `boot-recovery` survives and the device
+# boots straight back into recovery. Copied explicitly as well as via
+# recovery/root/ so it cannot be missed. Shell script, not an ELF, so
+# PRODUCT_COPY_FILES is fine here.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/root/system/bin/rebootsystem.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/rebootsystem.sh
