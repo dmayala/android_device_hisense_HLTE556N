@@ -7,14 +7,12 @@
 # mount point       fstype    device                                        flags
 
 # Logical partitions in super
-/system             ext4      system                                        flags=display="System";logical;slotselect
-/system_ext         ext4      system_ext                                    flags=display="System ext";logical;slotselect
-/vendor             ext4      vendor                                        flags=display="Vendor";logical;slotselect
-/product            ext4      product                                       flags=display="Product";logical;slotselect
+/system             ext4      system                                        flags=display="System";logical;slotselect;fsflags=ro
+/system_ext         ext4      system_ext                                    flags=display="System ext";logical;slotselect;fsflags=ro
+/vendor             ext4      vendor                                        flags=display="Vendor";logical;slotselect;fsflags=ro;mounttodecrypt
+/product            ext4      product                                       flags=display="Product";logical;slotselect;fsflags=ro
 
 # Data and metadata
-# NOTE: FBE with hardware-wrapped keys + dm-default-key metadata encryption.
-# Decryption is expected to fail — the SD card below is the working medium.
 # /data -- FBE v2 + dm-default-key metadata encryption, hardware-wrapped keys.
 #
 # The crypto flags below are NOT optional decoration. partition.cpp picks the
