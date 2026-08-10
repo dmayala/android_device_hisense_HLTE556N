@@ -76,4 +76,13 @@ PRODUCT_COPY_FILES += \
 # device: pushing libion.so let the HAL start and keystore2 go from
 # "restarting" to "running".
 PRODUCT_PACKAGES += \
-    libion_recovery
+    libion
+
+# NOTE on libion above: it must come from AOSP, NOT a prebuilt in this tree.
+# Shipping our own copy collides with AOSP's recovery variant of the same
+# module and breaks the build:
+#   error: overriding commands for target
+#   '.../recovery/root/system/lib64/libion.so'
+# That collision also proves AOSP installs it into the recovery ramdisk here.
+# Still VERIFY the file is present in the built image before flashing -- an
+# earlier build listed the package and shipped without it.
