@@ -268,15 +268,19 @@ TW_INCLUDE_RESETPROP := true
 RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
 RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
 
-# libion must be added to the RECOVERY ramdisk, and PRODUCT_PACKAGES cannot do
-# it: that only installs the system variant. Verified twice by unpacking the
-# built image -- /system/lib64/libion.so was absent both times. AOSP does
-# define a rule for the recovery path (shipping our own prebuilt collided with
-# it: "overriding commands for target .../recovery/root/system/lib64/libion.so")
-# but nothing pulls the module into the recovery image. TARGET_RECOVERY_DEVICE_MODULES
-# is the mechanism for that.
+# libion for the recovery ramdisk -- shipped as a plain file under
+# recovery/root/system/lib64/, which is the ONLY mechanism that works here.
 #
-# Needed by the vendor keymaster HAL, without which /data cannot decrypt:
-#   CANNOT LINK EXECUTABLE ".../android.hardware.keymaster@4.1-service-qti":
-#   library "libion.so" not found: needed by /vendor/lib64/libkeymasterdeviceutils.so
-TARGET_RECOVERY_DEVICE_MODULES += libion
+# Tried and failed, each verified by unpacking the built image:
+#   PRODUCT_PACKAGES += libion          -> installs the system variant only
+#   BUILD_PREBUILT module               -> collides with AOSP's rule for the
+#                                          same path ("overriding commands for
+#                                          target .../libion.so")
+#   TARGET_RECOVERY_DEVICE_MODULES      -> no effect
+#   PRODUCT_COPY_FILES                  -> rejected, ELF files are not allowed
+# recovery/root/ is copied verbatim into the ramdisk with no ELF check, which
+# is how init.recovery.qcom.rc and rebootsystem.sh get there.
+#
+# Needed by the vendor keymaster HAL; without it both HALs sit in
+# init.svc=restarting, /data cannot decrypt, AND the constant respawning
+# starves the E Ink TCON and corrupts the display.
