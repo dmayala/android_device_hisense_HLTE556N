@@ -159,17 +159,19 @@ service fscryptring /system/bin/fscryptring quiet
 on early-init
     start fscryptring
 
-# Do not auto-start MTP.
+
+# Boot control HAL, needed by fastbootd for slot-count / current-slot.
 #
-# Once /data decrypts, twrp.cpp starts MTP, and Enable_MTP() does
-#   sys.usb.config = none  ->  sys.usb.config = "mtp,adb"
-# This device's gadget is configfs (sys.usb.configfs=1) and /config/usb_gadget/g1
-# only has ffs.adb and ffs.fastboot -- there is no MTP function, and no init
-# handler for "mtp,adb" on the configfs path. So the gadget is torn down and
-# never rebuilt: USB disappears the instant the GUI finishes loading.
+# fastbootd caches the HAL at construction (FastbootDevice's boot_control_hal_),
+# so hwservicemanager's lazy-start always loses the race: fastbootd reports
+# slot-count 0 and current-slot "", the host never appends _a, and
+# `fastboot flash system <gsi>` cannot resolve the partition.
 #
-# twrp.cpp skips MTP at boot when mtp.crash_check != 0 (it also clears
-# tw_mtp_enabled). The GUI will say "MTP Crashed, not starting MTP on boot" --
-# cosmetic only. MTP can still be enabled by hand from the Mount page.
-on init
-    setprop mtp.crash_check 1
+# Start it at post-fs instead -- after `on fs` creates the
+# /dev/block/bootdevice symlink, and long before anything touches fastboot.
+# The impl (/vendor/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so plus
+# libboot_control_qti.so and librecovery_updater.so) is shipped in the RAMDISK
+# /vendor, because process_fastbootd_mode() calls Unmap_Super_Devices() and the
+# real /vendor is gone by the time fastbootd runs.
+on post-fs
+    start boot-hal-1-1

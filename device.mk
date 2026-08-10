@@ -76,6 +76,23 @@ PRODUCT_COPY_FILES += \
 # device: pushing libion.so let the HAL start and keystore2 go from
 # "restarting" to "running".
 
+# recovery/root/system/etc/init/hw/init.rc is a PINNED FORK of AOSP's recovery
+# init.rc. It carries five small hunks that add MTP on the configfs USB path:
+# an ffs.mtp function, the /dev/usb-ffs/mtp functionfs mount, an `rm .../f2` in
+# the teardown, and two AOSP-style bind handlers (mtp,adb and mtp-only).
+#
+# Why a fork: TWRP's MTP server is FunctionFS-based and publishes
+# sys.usb.ffs.mtp.ready=1, but this ramdisk's gadget had no ffs.mtp function and
+# no configfs handler for "mtp,adb" -- the only handler wrote to the legacy
+# /sys/class/android_usb/android0 nodes, which are an inert stub on this device.
+# So Enable_MTP()'s  config=none -> config=mtp,adb  tore the gadget down and
+# nothing rebuilt it: USB vanished the moment MTP was enabled.
+#
+# MAINTENANCE: because this is a whole-file copy, it PINS init.rc at the version
+# it was forked from. If the upstream twrp-12.1 tree changes init.rc, this copy
+# silently keeps the old one. On any manifest bump, diff this file against
+# system/core/rootdir/init.rc and re-apply the five hunks.
+
 # NOTE on libion above: it must come from AOSP, NOT a prebuilt in this tree.
 # Shipping our own copy collides with AOSP's recovery variant of the same
 # module and breaks the build:

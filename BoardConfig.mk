@@ -66,7 +66,21 @@ BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x01000000
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-BOARD_KERNEL_CMDLINE := console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0x4a90000 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 swiotlb=2048 loop.max_part=7 buildvariant=user
+# androidboot.dynamic_partitions=true is NOT cosmetic and is NOT in the stock
+# recovery cmdline -- it is what makes `adb reboot fastboot` reach fastbootd.
+#
+# This bootloader does not pass ro.boot.dynamic_partitions on the RECOVERY
+# cmdline (it does on the boot one). With the property empty, AOSP init's
+# HandlePowerctlMessage() decides the device has no dynamic partitions, so
+# there is nothing for userspace fastboot to serve and it silently reroutes
+# "reboot,fastboot" to the BOOTLOADER instead. Symptom: `adb reboot fastboot`
+# lands in bootloader fastboot (or, with a stale BCB, straight back in the TWRP
+# GUI) and `fastboot getvar is-userspace` reports "no".
+#
+# Setting it here makes init take the fastbootd path: is-userspace yes,
+# slot-count 2, and `fastboot flash system <gsi>` resolves system -> system_a.
+# Verified 2026-08-10 by a real 3.81 GB write to system_a.
+BOARD_KERNEL_CMDLINE := console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0x4a90000 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 swiotlb=2048 loop.max_part=7 buildvariant=user androidboot.dynamic_partitions=true
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
 BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)

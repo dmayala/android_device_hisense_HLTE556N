@@ -12,5 +12,5 @@ service boot-hal-1-1 /system/bin/android.hardware.boot@1.1-service
     user root
     group root
     setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
-    disabled
+
     seclabel u:r:recovery:s0
