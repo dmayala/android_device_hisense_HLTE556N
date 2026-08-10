@@ -76,4 +76,4 @@ PRODUCT_COPY_FILES += \
 # device: pushing libion.so let the HAL start and keystore2 go from
 # "restarting" to "running".
 PRODUCT_PACKAGES += \
-    libion
+    libion_recovery
