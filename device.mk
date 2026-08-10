@@ -75,8 +75,6 @@ PRODUCT_COPY_FILES += \
 # and keystore2 then crash-loops, so /data never decrypts. Verified live on
 # device: pushing libion.so let the HAL start and keystore2 go from
 # "restarting" to "running".
-PRODUCT_PACKAGES += \
-    libion
 
 # NOTE on libion above: it must come from AOSP, NOT a prebuilt in this tree.
 # Shipping our own copy collides with AOSP's recovery variant of the same

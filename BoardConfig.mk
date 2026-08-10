@@ -267,3 +267,16 @@ TW_INCLUDE_RESETPROP := true
 # in vendor/twrp/config/BoardConfigSoong.mk before trusting a build.
 RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
 RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
+
+# libion must be added to the RECOVERY ramdisk, and PRODUCT_PACKAGES cannot do
+# it: that only installs the system variant. Verified twice by unpacking the
+# built image -- /system/lib64/libion.so was absent both times. AOSP does
+# define a rule for the recovery path (shipping our own prebuilt collided with
+# it: "overriding commands for target .../recovery/root/system/lib64/libion.so")
+# but nothing pulls the module into the recovery image. TARGET_RECOVERY_DEVICE_MODULES
+# is the mechanism for that.
+#
+# Needed by the vendor keymaster HAL, without which /data cannot decrypt:
+#   CANNOT LINK EXECUTABLE ".../android.hardware.keymaster@4.1-service-qti":
+#   library "libion.so" not found: needed by /vendor/lib64/libkeymasterdeviceutils.so
+TARGET_RECOVERY_DEVICE_MODULES += libion
