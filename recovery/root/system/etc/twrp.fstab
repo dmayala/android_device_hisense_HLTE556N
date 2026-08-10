@@ -43,9 +43,18 @@
 
 # Misc -- backup=1 so it shows up in the Backup list.
 #
-# Worth backing up: misc holds the Virtual A/B message at offset 32768 (magic
-# 0x56740AB0). `fastboot erase misc` destroys it and there is no other copy, so
-# a saved image is the only way back. That is why erase is banned outright.
+# THIS FLAG IS REQUIRED, NOT A CONVENIENCE. Verified 2026-08-10: restoring
+# `super` WITHOUT restoring a matching `misc` leaves the device unbootable, and
+# the only way out is Format Data -- i.e. the backup cannot be restored without
+# destroying exactly the data it was taken to protect. misc carries the Virtual
+# A/B message at offset 32768 (magic 0x56740AB0), which describes snapshot and
+# merge state; if that state disagrees with the LP metadata in the restored
+# super, boot fails and /data cannot be decrypted.
+#
+# So misc must be backed up and restored TOGETHER with super and data. Without
+# backup=1 here, TWRP silently produced backups that could not be restored.
+# `fastboot erase misc` destroys the same structure and has no other copy --
+# which is why erase is banned outright.
 #
 # RESTORE WITH CARE, and this is why it is not simply "another partition":
 # misc is VOLATILE. Its first 2048 bytes are the bootloader control block, which
