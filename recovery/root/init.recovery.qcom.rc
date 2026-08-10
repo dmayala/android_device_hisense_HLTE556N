@@ -47,7 +47,7 @@ on fs
 # 4.0 is measured from the device's own /vendor/etc/vintf/manifest.xml:
 #   android.hardware.keymaster @4.0::IKeymasterDevice/default
 on init
-    setprop keymaster_ver 4.0
+    setprop keymaster_ver 4.1
 
 # Vendor keymaster + gatekeeper HALs, needed to decrypt /data.
 #
@@ -71,16 +71,105 @@ on init
 
 service vendor.keymaster-4-1 /vendor/bin/hw/android.hardware.keymaster@4.1-service-qti
     class early_hal
-    user system
-    group system drmrpc
+    user root
+    group root system drmrpc
     seclabel u:r:recovery:s0
 
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti
     class early_hal
-    user system
-    group system
+    user root
+    group root system
     seclabel u:r:recovery:s0
 
 on property:fstab.additional=1
     start vendor.keymaster-4-1
     start gatekeeper-1-0
+
+service vendor.keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service-qti
+    class early_hal
+    user root
+    group root system drmrpc
+    seclabel u:r:recovery:s0
+
+on property:fstab.additional=1
+    start vendor.keymaster-4-0
+
+# ROOT CAUSE FIX (2026-08-10)
+#
+# The QTI keymaster HAL does NOT register with hwservicemanager until the
+# QSEECom TZ listeners are up. libkeymasterdeviceutils.so calls
+#   android::base::WaitForPropertyCreation("vendor.sys.listeners.registered")
+# with NO timeout, inside CreateKeymasterDevice(), i.e. BEFORE
+# registerAsService(). Without qseecomd that property is never created, so the
+# HAL sits single-threaded in a nanosleep poll loop forever and every
+# getService() on the client side blocks forever.
+#
+# Stock does this in /vendor/etc/init/qseecomd.rc + init.target.rc:
+#   on init: wait /dev/qseecom; start vendor.qseecomd; start keymaster-4-0
+service vendor.qseecomd /vendor/bin/qseecomd
+    class early_hal
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+on property:fstab.additional=1
+    start vendor.qseecomd
+
+# TWRP's ueventd never reads /vendor/ueventd.rc, so the TZ device nodes keep
+# their default 0600 root:root instead of stock's:
+#   /dev/ion 0664 system system ; /dev/qseecom 0660 system drmrpc ;
+#   /dev/smcinvoke 0660 system drmrpc
+# The QTI keymaster HAL SIGABRTs when it cannot open them.
+on init
+    chown system system /dev/ion
+    chmod 0666 /dev/ion
+    chown system drmrpc /dev/qseecom
+    chmod 0666 /dev/qseecom
+    chown system drmrpc /dev/smcinvoke
+    chmod 0666 /dev/smcinvoke
+
+# Minimal logd replacement: binds /dev/socket/logdw and dumps every liblog
+# record to /tmp/logdw.txt. Recovery has no logd, so Rust panics in keystore2
+# and every libbase LOG(FATAL) are otherwise invisible.
+service logdstub /system/bin/logdstub
+    class core
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+on early-init
+    start logdstub
+
+# FBE per-file keys: vold's installProvisioningKey() does
+#   keyctl_search(KEY_SPEC_SESSION_KEYRING, "keyring", "fscrypt", 0)
+# and bails with "Unable to find device keyring: Required key not available"
+# if that named keyring does not exist. On a normal boot AOSP init creates it
+# via libfscrypt's fscrypt_install_keyring(); TWRP's init never does. The
+# FS_IOC_ADD_ENCRYPTION_KEY ioctl itself SUCCEEDS -- installKey() then fails on
+# the provisioning-key step, and TWRP's retry hack flips use_hw_wrapped_key,
+# so the retry legitimately fails with EINVAL. This creates the keyring in
+# init's session keyring, which every init child (including recovery) shares.
+service fscryptring /system/bin/fscryptring quiet
+    class core
+    user root
+    group root
+    oneshot
+    seclabel u:r:recovery:s0
+
+on early-init
+    start fscryptring
+
+# Do not auto-start MTP.
+#
+# Once /data decrypts, twrp.cpp starts MTP, and Enable_MTP() does
+#   sys.usb.config = none  ->  sys.usb.config = "mtp,adb"
+# This device's gadget is configfs (sys.usb.configfs=1) and /config/usb_gadget/g1
+# only has ffs.adb and ffs.fastboot -- there is no MTP function, and no init
+# handler for "mtp,adb" on the configfs path. So the gadget is torn down and
+# never rebuilt: USB disappears the instant the GUI finishes loading.
+#
+# twrp.cpp skips MTP at boot when mtp.crash_check != 0 (it also clears
+# tw_mtp_enabled). The GUI will say "MTP Crashed, not starting MTP on boot" --
+# cosmetic only. MTP can still be enabled by hand from the Mount page.
+on init
+    setprop mtp.crash_check 1

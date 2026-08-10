@@ -1,0 +1,8 @@
+# Interface declarations removed: this device's vendor impl is only @1.1, so
+# the @1.2 service can never register. See android.hardware.boot@1.1-service.rc.
+service boot-hal-1-2 /system/bin/android.hardware.boot@1.2-service
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
+    disabled
+    seclabel u:r:recovery:s0

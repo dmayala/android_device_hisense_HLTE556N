@@ -1,0 +1,16 @@
+# The vendor impl on this device is android.hardware.boot@1.0-impl-1.1-qti.so,
+# which implements @1.1 ONLY. The @1.2 service refuses it:
+#   "Implementation of android.hardware.boot@1.0::IBootControl/default is
+#    actually android.hardware.boot@1.1::IBootControl, not a @1.2"
+# so it exits and never registers. vold's cp_needsCheckpoint() then blocks
+# forever in IBootControl::getService() -- which is what stalls TWRP right
+# after "Mounting metadata-encrypted filesystem:/data".
+# Declaring the interfaces here makes hwservicemanager lazy-start THIS one.
+service boot-hal-1-1 /system/bin/android.hardware.boot@1.1-service
+    interface android.hardware.boot@1.0::IBootControl default
+    interface android.hardware.boot@1.1::IBootControl default
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
+    disabled
+    seclabel u:r:recovery:s0

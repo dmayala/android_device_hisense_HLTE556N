@@ -285,20 +285,13 @@ RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
 # init.svc=restarting, /data cannot decrypt, AND the constant respawning
 # starves the E Ink TCON and corrupts the display.
 
-# Do NOT let TWRP ingest the vendor fstab.
+# NOTE: TW_SKIP_ADDITIONAL_FSTAB must stay OFF.
 #
-# With /vendor mountable (fsflags=ro) TWRP copies /vendor/etc/fstab.default to
-# /etc/additional.fstab. That vendor fstab carries keydirectory=, so TWRP takes
-# the FBE path and calls fscrypt_mount_metadata_encrypted(), which does a HIDL
-# getService() for a keymaster HAL that never registers in recovery. That call
-# BLOCKS FOREVER:
-#     Using additional fstab for decryption /etc/additional.fstab   <- last line
-#     recovery 459 futex_wait_queue_me                              <- blocked
-# TWRP's startup stalls inside it, so the GUI never loads and the panel sits on
-# the splash screen. This looks exactly like a rendering bug and is not one --
-# it cost three wrong diagnoses (theme, TCON, crash-looping HALs).
+# It was added to stop a decrypt that hung TWRP forever. That hang is now fixed
+# at source (qseecomd + the fscrypt session keyring), and the additional fstab
+# is where the crypto config actually comes from -- /etc/twrp.fstab carries no
+# keydirectory=, so skipping the vendor fstab would break decryption entirely.
 #
-# Diagnose by process state, not by the screen:
-#     ps -A | grep " recovery$"     futex_wait_queue_me = stalled
-#                                   do_sys_poll         = healthy event loop
-TW_SKIP_ADDITIONAL_FSTAB := true
+# The old hang symptom, for reference:
+#   Using additional fstab for decryption /etc/additional.fstab   <- last log line
+#   recovery <pid> futex_wait_queue_me                            <- blocked

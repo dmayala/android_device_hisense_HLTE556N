@@ -1,0 +1,54 @@
+# Hisense A9 (HLTE556N) — TWRP fstab
+#
+# Partition labels verified against rawprogram*.xml and
+# Stock/COM4_PartitionsList.xml. Logical partitions live in `super`
+# (group qti_dynamic_partitions_a/_b) and take `logical;slotselect`.
+#
+# mount point       fstype    device                                        flags
+
+# Logical partitions in super
+/system             ext4      system                                        flags=display="System";logical;slotselect;fsflags=ro
+/system_ext         ext4      system_ext                                    flags=display="System ext";logical;slotselect;fsflags=ro
+/vendor             ext4      vendor                                        flags=display="Vendor";logical;slotselect;fsflags=ro;mounttodecrypt
+/product            ext4      product                                       flags=display="Product";logical;slotselect;fsflags=ro
+
+# Data and metadata
+# /data -- FBE v2 + dm-default-key metadata encryption, hardware-wrapped keys.
+#
+# The crypto flags below are NOT optional decoration. partition.cpp picks the
+# decryption path on `Key_Directory.empty()`: with no keydirectory= flag TWRP
+# takes the legacy FDE branch, calls cryptfs_check_footer(), finds no footer on
+# an FBE device and gives up with
+#   "Could not mount /data and unable to find crypto footer."
+# which is exactly what happened before these flags were added.
+#
+# Values copied verbatim from the device's own /vendor/etc/fstab.default
+# (androidboot.fstab_suffix=default -> the UFS variant, hence
+# inlinecrypt_optimized rather than emmc_optimized).
+/data               f2fs      /dev/block/bootdevice/by-name/userdata        flags=display="Data";backup=1;wipeingui
+/metadata           ext4      /dev/block/bootdevice/by-name/metadata        flags=display="Metadata";backup=1
+/cache              ext4      /dev/block/bootdevice/by-name/cache           flags=display="Cache";backup=1;wipeingui
+/persist            ext4      /dev/block/bootdevice/by-name/persist         flags=display="Persist";backup=1
+
+# Slotted images
+/boot               emmc      /dev/block/bootdevice/by-name/boot            flags=display="Boot";slotselect;backup=1
+/recovery           emmc      /dev/block/bootdevice/by-name/recovery        flags=display="Recovery";slotselect;backup=1
+/dtbo               emmc      /dev/block/bootdevice/by-name/dtbo            flags=display="DTBO";slotselect;backup=1
+/vbmeta             emmc      /dev/block/bootdevice/by-name/vbmeta          flags=display="Vbmeta";slotselect;backup=1
+/vbmeta_system      emmc      /dev/block/bootdevice/by-name/vbmeta_system   flags=display="Vbmeta system";slotselect;backup=1
+/modem              emmc      /dev/block/bootdevice/by-name/modem           flags=display="Modem";slotselect;backup=1
+
+# Whole super, for imaging
+/super              emmc      /dev/block/bootdevice/by-name/super           flags=display="Super";backup=1
+
+# Misc
+/misc               emmc      /dev/block/bootdevice/by-name/misc            flags=display="Misc"
+
+# Removable storage — primary working medium for this device
+/external_sd        vfat      /dev/block/mmcblk1p1                          flags=display="MicroSD";storage;wipeingui;removable
+# USB-OTG. twrpdtgen guessed /dev/block/sda1 -- that is WRONG and dangerous on
+# this device: sda..sdf are the six internal UFS LUNs, so sda1 is the `ssd`
+# partition and sdb1 is `xbl_a` (the bootloader). With storage;wipeingui that
+# put "format the internal ssd partition" in TWRP's Wipe menu labelled
+# "USB-OTG". An attached OTG drive enumerates after the LUNs, i.e. sdg.
+/usb_otg            vfat      /dev/block/sdg1                               flags=display="USB-OTG";storage;wipeingui;removable
