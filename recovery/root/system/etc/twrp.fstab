@@ -41,8 +41,24 @@
 # Whole super, for imaging
 /super              emmc      /dev/block/bootdevice/by-name/super           flags=display="Super";backup=1
 
-# Misc
-/misc               emmc      /dev/block/bootdevice/by-name/misc            flags=display="Misc"
+# Misc -- backup=1 so it shows up in the Backup list.
+#
+# Worth backing up: misc holds the Virtual A/B message at offset 32768 (magic
+# 0x56740AB0). `fastboot erase misc` destroys it and there is no other copy, so
+# a saved image is the only way back. That is why erase is banned outright.
+#
+# RESTORE WITH CARE, and this is why it is not simply "another partition":
+# misc is VOLATILE. Its first 2048 bytes are the bootloader control block, which
+# is rewritten on every reboot-to-recovery. A backup therefore captures whatever
+# the BCB happened to say at that moment -- quite possibly `boot-recovery`.
+# Restoring that image later replays the old command and sends the device
+# straight back into recovery on the next boot, which looks exactly like the
+# sticky-BCB bug we spent this session fixing.
+#
+# If a restored misc ever loops into recovery, zero ONLY the first 2048 bytes:
+#   dd if=/dev/zero of=/dev/block/bootdevice/by-name/misc bs=1 count=2048 conv=notrunc
+# That clears the BCB and leaves the Virtual A/B header at 32768 intact.
+/misc               emmc      /dev/block/bootdevice/by-name/misc            flags=display="Misc";backup=1
 
 # Removable storage — primary working medium for this device
 /external_sd        vfat      /dev/block/mmcblk1p1                          flags=display="MicroSD";storage;wipeingui;removable
