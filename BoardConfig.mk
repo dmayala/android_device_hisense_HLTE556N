@@ -284,3 +284,21 @@ RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
 # Needed by the vendor keymaster HAL; without it both HALs sit in
 # init.svc=restarting, /data cannot decrypt, AND the constant respawning
 # starves the E Ink TCON and corrupts the display.
+
+# Do NOT let TWRP ingest the vendor fstab.
+#
+# With /vendor mountable (fsflags=ro) TWRP copies /vendor/etc/fstab.default to
+# /etc/additional.fstab. That vendor fstab carries keydirectory=, so TWRP takes
+# the FBE path and calls fscrypt_mount_metadata_encrypted(), which does a HIDL
+# getService() for a keymaster HAL that never registers in recovery. That call
+# BLOCKS FOREVER:
+#     Using additional fstab for decryption /etc/additional.fstab   <- last line
+#     recovery 459 futex_wait_queue_me                              <- blocked
+# TWRP's startup stalls inside it, so the GUI never loads and the panel sits on
+# the splash screen. This looks exactly like a rendering bug and is not one --
+# it cost three wrong diagnoses (theme, TCON, crash-looping HALs).
+#
+# Diagnose by process state, not by the screen:
+#     ps -A | grep " recovery$"     futex_wait_queue_me = stalled
+#                                   do_sys_poll         = healthy event loop
+TW_SKIP_ADDITIONAL_FSTAB := true
