@@ -449,11 +449,15 @@ def main():
     th = Theme()
     pages = sys.argv[2:] or ["main2", "wipe", "install", "reboot", "backup_run"]
     for p in pages:
-        overlay = None
+        overlay, sets = None, {}
+        if "," in p:  # page,var=value,... overrides mock values
+            p, *kv = p.split(",")
+            sets = dict(x.split("=", 1) for x in kv)
         if ":" in p:
             overlay, p = p.split(":", 1)[1], p.split(":", 1)[0]
         for k, v in list(MOCK.items()):
             th.vars[k] = v
+        th.vars.update(sets)
         im = render_page(th, p)
         if overlay:
             r = Renderer(th)
