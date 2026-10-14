@@ -110,6 +110,27 @@ so the build succeeds either way. It just will not render on this panel.
   that does not fit its index, so ordinary updates keep the stock 38-frame
   partial GC16.
 
+### Theme "Ink" (branch `ink-theme`, with the recovery fork's `ink-theme`)
+
+A monochrome outline theme drawn for this panel at its native 824x1648 (no
+runtime scaling): white ground, ink `#111111`, one grey `#5C5C5C` for
+secondary text only, no grey fills or gradients (they ghost on E Ink),
+Figtree and JetBrains Mono (both SIL OFL 1.1, licences in `theme/fonts/`).
+The approved mockups are in `design/` (half scale; every size x2).
+
+- `theme/gen_theme.py` writes the whole theme into `recovery/root/twres/`
+  from TWRP's stock `gui/theme/common/portrait.xml`: Home, Wipe, Install,
+  Reboot and Backup-in-progress are laid out to the design, every other page
+  is the stock page restyled through variables, styles and images. Do not edit
+  `recovery/root/twres/` by hand; change the generator and re-run it.
+- `theme/preview.py` renders pages offline into PNGs (layout check only).
+- How it gets into the image: see the `TW_THEME` comment in `BoardConfig.mk`.
+- With the recovery fork's `ink-theme`, the first frame of every new page is
+  drawn with the full waveform (no ghost of the previous page), at most once
+  per second plus one trailing refresh when navigation settles. Off switch:
+  Settings > Screen > "Full E Ink refresh on page change", or
+  `adb shell twrp set tw_eink_page_refresh 0`.
+
 Do not re-investigate the EPD sysfs nodes, the waveform, the DSI-to-DPI bridge,
 or ADF — all were measured against live stock and excluded. The
 `tc358767 ret=-107` error is benign; Android logs it constantly while rendering

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TWRP install file picker, Ink OS style</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#000}
+</style>
+</helmet>
+<div style="width: 412px; height: 824px; box-sizing: border-box; background: #FFFFFF; color: #111111; font-family: 'Figtree', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 30px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600">
+    <span>CPU 37 °C</span><span>96% · 11:41</span>
+  </div>
+  <div style="padding: 14px 14px 4px; display: flex; align-items: center; gap: 6px">
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Back"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M14 4l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700">Install</h1>
+  </div>
+  <div style="margin: 6px 22px 0; display: flex; gap: 8px">
+    <button style="all: unset; cursor: pointer; min-height: 40px; padding: 0 16px; border-radius: 20px; background: #111111; color: #FFFFFF; display: flex; align-items: center; font-size: 14px; font-weight: 600">Internal</button>
+    <button style="all: unset; cursor: pointer; min-height: 40px; padding: 0 16px; box-sizing: border-box; border: 2px solid #111111; border-radius: 20px; display: flex; align-items: center; font-size: 14px; font-weight: 600">MicroSD</button>
+    <button style="all: unset; cursor: pointer; min-height: 40px; padding: 0 16px; box-sizing: border-box; border: 2px solid #111111; border-radius: 20px; display: flex; align-items: center; font-size: 14px; font-weight: 600">Image</button>
+  </div>
+  <div style="margin: 16px 26px 8px; font-size: 13px; color: #5C5C5C">/sdcard/Download</div>
+  <div style="margin: 0 22px; box-sizing: border-box; border: 2px solid #111111; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+      <button style="all: unset; cursor: pointer; min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 14px; border-bottom: {{r.rule}}">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg>
+        <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+          <span style="font-size: 12px; color: #5C5C5C">{{r.meta}}</span>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+  <div style="flex-grow: 1"></div>
+  <div style="margin: 0 22px 18px; height: 64px; box-sizing: border-box; border: 2px solid #111111; border-radius: 32px; display: flex; align-items: center; padding: 6px; gap: 14px">
+    <span style="width: 50px; height: 50px; border-radius: 25px; background: #111111; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M8 4l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+    <span style="font-size: 16px; font-weight: 600">Select a ZIP to install</span>
+  </div>
+  <nav style="height: 58px; display: flex; align-items: center; justify-content: space-around; padding: 0 46px" aria-label="Navigation">
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Back"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M16 3.5L5 11l11 7.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path></svg></button>
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Home"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle></svg></button>
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Console"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="3.5" y="3.5" width="15" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg></button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":412,"height":824}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const folder = 'M3 6.5h6l2 2h10v10H3z';
+    const file = 'M6 3h8l4 4v14H6zM14 3v4h4';
+    const rows = [
+      { name: 'Up a level', meta: '/sdcard', icon: 'M9 11l3-3 3 3M12 8v9' },
+      { name: 'Magisk', meta: 'Folder', icon: folder },
+      { name: 'modules', meta: 'Folder', icon: folder },
+      { name: 'Magisk-v30.7.apk', meta: '12 MB', icon: file },
+      { name: 'MindTheGapps-16.0.0-arm64.zip', meta: '310 MB', icon: file },
+      { name: 'twrp-HLTE556N.img', meta: '96 MB', icon: file },
+      { name: 'Sorayomi-0.6.3.apk', meta: '41 MB', icon: file }
+    ].map((r, i, a) => ({ ...r, rule: i === a.length - 1 ? 'none' : '1.5px solid #111111' }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

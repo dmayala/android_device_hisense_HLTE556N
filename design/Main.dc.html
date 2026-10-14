@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TWRP home, Ink OS style</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#000}
+</style>
+</helmet>
+<div style="width: 412px; height: 824px; box-sizing: border-box; background: #FFFFFF; color: {{ink}}; font-family: 'Figtree', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 30px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600">
+    <span>CPU 37 °C</span>
+    <span style="display: flex; align-items: center; gap: 6px">96%
+      <svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><rect x="1" y="1" width="19" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"></rect><rect x="3" y="3" width="15" height="6" rx="1" fill="currentColor"></rect><rect x="21.5" y="4" width="1.6" height="4" rx="0.8" fill="currentColor"></rect></svg>
+      11:39</span>
+  </div>
+  <div style="padding: 22px 26px 6px; display: flex; align-items: center; gap: 14px">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="14.5" fill="none" stroke="currentColor" stroke-width="2.2"></circle><path d="M11 13.5l6-5 6 5M17 8.5v17M11 20.5l6 5 6-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.2px">Recovery</span>
+      <span style="font-size: 13px; color: {{muted}}">TWRP 3.7.1 · Hisense A9</span>
+    </div>
+  </div>
+  <div style="margin: 18px 22px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 26px; column-gap: 8px">
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="8">
+      <button style="all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 9px" aria-label="{{t.label}}">
+        <span style="width: 66px; height: 66px; box-sizing: border-box; border: {{stroke}}px solid {{ink}}; border-radius: 17px; display: flex; align-items: center; justify-content: center">
+          <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"></path></svg>
+        </span>
+        <span style="font-size: 14px; font-weight: 600">{{t.label}}</span>
+      </button>
+    </sc-for>
+  </div>
+  <div style="margin: 34px 22px 0; box-sizing: border-box; border: {{stroke}}px solid {{ink}}; border-radius: 16px; padding: 14px 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 10px; column-gap: 12px; font-size: 13px">
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="color: {{muted}}">Data</span><span style="font-weight: 600">Decrypted · 216 GB free</span></div>
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="color: {{muted}}">Active slot</span><span style="font-weight: 600">A</span></div>
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="color: {{muted}}">System</span><span style="font-weight: 600">LineageOS 23.2</span></div>
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="color: {{muted}}">Storage</span><span style="font-weight: 600">Internal + microSD</span></div>
+  </div>
+  <div style="flex-grow: 1"></div>
+  <nav style="height: 58px; display: flex; align-items: center; justify-content: space-around; padding: 0 46px" aria-label="Navigation">
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Back"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M16 3.5L5 11l11 7.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path></svg></button>
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Home"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle></svg></button>
+    <button style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center" aria-label="Console"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="3.5" y="3.5" width="15" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg></button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#111111","options":["#111111","#000000","#2A2A2A"]},"muted":{"editor":"color","default":"#5C5C5C","options":["#5C5C5C","#4A4A4A","#707070"]},"stroke":{"editor":"range","default":2,"min":1,"max":4,"step":0.5,"unit":"px"},"$preview":{"width":412,"height":824}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tiles = [
+      { label: 'Install', icon: 'M16 5v15M9.5 13.5L16 20l6.5-6.5M7 25h18' },
+      { label: 'Wipe', icon: 'M7 10h18M12 10V7h8v3M9.5 10l1.3 15h10.4l1.3-15M14 14v7M18 14v7' },
+      { label: 'Backup', icon: 'M6 9.5c0-2 4.5-3.5 10-3.5s10 1.5 10 3.5-4.5 3.5-10 3.5S6 11.5 6 9.5zM6 9.5v13c0 2 4.5 3.5 10 3.5s10-1.5 10-3.5v-13M6 16c0 2 4.5 3.5 10 3.5S26 18 26 16' },
+      { label: 'Restore', icon: 'M8 16a8 8 0 1 0 2.4-5.7M8 6.5v4.8h4.8M16 11.5V16l3 2' },
+      { label: 'Mount', icon: 'M5 12h22v12H5zM9 8h14M12 18h8' },
+      { label: 'Settings', icon: 'M16 11.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM16 4.5v3M16 24.5v3M4.5 16h3M24.5 16h3M7.9 7.9l2.1 2.1M22 22l2.1 2.1M7.9 24.1L10 22M22 10l2.1-2.1' },
+      { label: 'Advanced', icon: 'M6 10h12M22 10h4M6 22h4M14 22h12M18 7v6M10 19v6' },
+      { label: 'Reboot', icon: 'M16 5v9M10.5 8.2a9 9 0 1 0 11 0' }
+    ];
+    return { tiles, ink: this.props.ink ?? '#111111', muted: this.props.muted ?? '#5C5C5C', stroke: this.props.stroke ?? 2 };
+  }
+}
+</script>
+</body>
+</html>
