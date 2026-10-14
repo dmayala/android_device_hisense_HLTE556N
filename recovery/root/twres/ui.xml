@@ -128,6 +128,7 @@
 		<variable name="indent" value="44"/>
 		<variable name="col1_x_left" value="88"/>
 		<variable name="col1_x_header" value="128"/>
+		<variable name="col1_x_sub" value="52"/>
 		<variable name="center_x" value="412"/>
 		<variable name="col1_x_right" value="456"/>
 		<variable name="indent_right" value="780"/>
@@ -487,23 +488,23 @@
 
 		<template name="sort_options">
 			<image>
-				<placement x="%indent%" y="%row1a_y%"/>
+				<placement x="%indent%" y="%row1_y%"/>
 				<image resource="tab_3"/>
 			</image>
 
 			<image>
-				<placement x="%btn3_col2_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col2_x%" y="%row1_y%"/>
 				<image resource="tab_3"/>
 			</image>
 
 			<image>
-				<placement x="%btn3_col3_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col3_x%" y="%row1_y%"/>
 				<image resource="tab_3"/>
 			</image>
 
 			<button>
 				<condition var1="tw_gui_sort_order" op="=" var2="1"/>
-				<placement x="%indent%" y="%row1a_y%"/>
+				<placement x="%indent%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_name_only=Name}</text>
 				<image resource="sort_asc"/>
@@ -512,7 +513,7 @@
 
 			<button>
 				<condition var1="tw_gui_sort_order" op="=" var2="-1"/>
-				<placement x="%indent%" y="%row1a_y%"/>
+				<placement x="%indent%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_name_only=Name}</text>
 				<image resource="sort_desc"/>
@@ -524,7 +525,7 @@
 					<condition var1="tw_gui_sort_order" op="!=" var2="1"/>
 					<condition var1="tw_gui_sort_order" op="!=" var2="-1"/>
 				</conditions>
-				<placement x="%indent%" y="%row1a_y%"/>
+				<placement x="%indent%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_name_only=Name}</text>
 				<image resource="sort_empty"/>
@@ -533,7 +534,7 @@
 
 			<button>
 				<condition var1="tw_gui_sort_order" op="=" var2="2"/>
-				<placement x="%btn3_col2_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col2_x%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_date_only=Date}</text>
 				<image resource="sort_asc"/>
@@ -542,7 +543,7 @@
 
 			<button>
 				<condition var1="tw_gui_sort_order" op="=" var2="-2"/>
-				<placement x="%btn3_col2_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col2_x%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_date_only=Date}</text>
 				<image resource="sort_desc"/>
@@ -554,7 +555,7 @@
 					<condition var1="tw_gui_sort_order" op="!=" var2="2"/>
 					<condition var1="tw_gui_sort_order" op="!=" var2="-2"/>
 				</conditions>
-				<placement x="%btn3_col2_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col2_x%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_date_only=Date}</text>
 				<image resource="sort_empty"/>
@@ -563,7 +564,7 @@
 
 			<button>
 				<condition var1="tw_gui_sort_order" op="=" var2="3"/>
-				<placement x="%btn3_col3_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col3_x%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_size_only=Size}</text>
 				<image resource="sort_asc"/>
@@ -572,7 +573,7 @@
 
 			<button>
 				<condition var1="tw_gui_sort_order" op="=" var2="-3"/>
-				<placement x="%btn3_col3_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col3_x%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_size_only=Size}</text>
 				<image resource="sort_desc"/>
@@ -584,7 +585,7 @@
 					<condition var1="tw_gui_sort_order" op="!=" var2="3"/>
 					<condition var1="tw_gui_sort_order" op="!=" var2="-3"/>
 				</conditions>
-				<placement x="%btn3_col3_x%" y="%row1a_y%"/>
+				<placement x="%btn3_col3_x%" y="%row1_y%"/>
 				<font resource="font_s" color="%text_button_color%"/>
 				<text>{@sort_by_size_only=Size}</text>
 				<image resource="sort_empty"/>

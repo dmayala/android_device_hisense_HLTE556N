@@ -401,6 +401,9 @@ def variables():
     add("indent", INDENT)
     add("col1_x_left", 2 * INDENT)
     add("col1_x_header", 128)
+    # subtitles under a page title start at the page margin, as in the design
+    # (mockup 26 px x 2), not under the title after the back chevron
+    add("col1_x_sub", 52)
     add("center_x", W // 2)
     add("col1_x_right", W // 2 + INDENT)
     add("indent_right", W - INDENT)
@@ -653,7 +656,10 @@ def keyboard_templates():
 
 
 def sort_options():
-    y = "%row1a_y%"
+    # row1_y, not row1a_y: the 108 px tab image placed at row1a_y (267) reached
+    # 375 and the file list starting at row3_y (348) painted over its bottom
+    # (cut-off sort buttons on Restore, seen on the phone 2026-10-14)
+    y = "%row1_y%"
     out = ""
     for x in ("%indent%", "%btn3_col2_x%", "%btn3_col3_x%"):
         out += f'\t\t\t<image>\n\t\t\t\t<placement x="{x}" y="{y}"/>\n\t\t\t\t<image resource="tab_3"/>\n\t\t\t</image>\n\n'
@@ -1182,6 +1188,8 @@ def portrait_xml(stock):
 
     # black nav-bar fills on overlay/terminal pages -> white ground
     s = s.replace('<fill color="#000000">', '<fill color="%background_color%">')
+    # stock subtitles (storage line etc.) to the page margin
+    s = s.replace('x="%col1_x_header%" y="%row4_header_y%"', 'x="%col1_x_sub%" y="%row4_header_y%"')
     # dialogs: outline the white dialog box (the page behind is hidden, not dimmed)
     frame("frame_dialog", CONTENT_W, 11 * ROW)
     dlg = ('\t\t\t<fill color="%background_color%">\n'

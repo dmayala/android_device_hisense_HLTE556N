@@ -544,7 +544,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@zip_queue_count=%tw_zip_queue_count% of max of 10 Files queued}</text>
 			</text>
 
@@ -652,7 +652,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>%tw_file%</text>
 			</text>
 
@@ -676,13 +676,13 @@
 
 			<text style="text_m_fail">
 				<condition var1="tw_operation_status" op="!=" var2="0"/>
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@failed=Failed}</text>
 			</text>
 
 			<text style="text_m">
 				<condition var1="tw_operation_status" var2="0"/>
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@successful=Successful}</text>
 			</text>
 
@@ -781,7 +781,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@install_reboot=Rebooting in %tw_sleep% second(s)}</text>
 			</text>
 
@@ -829,7 +829,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@install_sel_target=Select Target Partition}</text>
 			</text>
 
@@ -967,7 +967,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text/>
 			</text>
 
@@ -1024,7 +1024,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>%tw_action_text2%</text>
 			</text>
 
@@ -1071,7 +1071,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>%tw_action_text2%</text>
 			</text>
 
@@ -1112,13 +1112,13 @@
 
 			<text style="text_m_fail">
 				<condition var1="tw_operation_status" op="!=" var2="0"/>
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@failed=Failed}</text>
 			</text>
 
 			<text style="text_m">
 				<condition var1="tw_operation_status" var2="0"/>
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@successful=Successful}</text>
 			</text>
 
@@ -1367,7 +1367,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@advanced_wipe_hdr=Advanced Wipe}</text>
 			</text>
 
@@ -1426,7 +1426,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@format_data_hdr=Format Data}</text>
 			</text>
 
@@ -1533,7 +1533,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@part_opt_hdr=Partition Options for: %tw_partition_name%}</text>
 			</text>
 
@@ -1675,7 +1675,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@change_fs_for_hdr=Change File System for: %tw_partition_name%}</text>
 			</text>
 
@@ -1845,7 +1845,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@storage_hdr=Storage: %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2003,7 +2003,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@storage_hdr=Storage: %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2130,7 +2130,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@storage_hdr=Storage: %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2246,7 +2246,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@storage_hdr=Storage: %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2354,7 +2354,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@storage_hdr=Storage: %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2589,7 +2589,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@restore_sel_store_hdr=Select Backup from %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2661,7 +2661,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@restore_sel_store_hdr=Select Backup from %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -2730,7 +2730,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@restore_enc_backup_hdr=Encrypted Backup}</text>
 			</text>
 
@@ -2810,7 +2810,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@restore_try_decrypt=Encrypted Backup - Trying Decryption}</text>
 			</text>
 
@@ -2854,7 +2854,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@restore_backup_date=Backup made on %tw_restore_file_date%}</text>
 			</text>
 
@@ -2938,7 +2938,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@rename_backup_hdr=Rename Backup}</text>
 			</text>
 
@@ -3011,7 +3011,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>%tw_operation% %tw_partition%</text>
 			</text>
 
@@ -3053,7 +3053,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@storage_hdr=Storage: %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -3158,7 +3158,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@usb_storage_hdr=USB Storage}</text>
 			</text>
 
@@ -3637,7 +3637,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@reboot_install_app_hdr=Install TWRP App}</text>
 			</text>
 
@@ -3777,7 +3777,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@settings_gen_hdr=General Settings}</text>
 			</text>
 
@@ -3871,7 +3871,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@time_zone_hdr=Time Zone}</text>
 			</text>
 
@@ -3983,7 +3983,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@settings_screen_hdr=Screen Settings}</text>
 			</text>
 
@@ -4072,7 +4072,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@vibration_hdr=Vibration}</text>
 			</text>
 
@@ -4129,7 +4129,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@language_hdr=Language - %tw_language_display%}</text>
 			</text>
 
@@ -4404,7 +4404,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@part_sd_hdr=Partition SD Card}</text>
 			</text>
 
@@ -4468,7 +4468,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@part_sd_hdr=Partition SD Card}</text>
 			</text>
 
@@ -4587,7 +4587,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@select_file_from_storage=Select File from %tw_storage_display_name% (%tw_storage_free_size% MB)}</text>
 			</text>
 
@@ -4646,13 +4646,13 @@
 
 			<text style="text_m">
 				<condition var1="tw_repack_kernel" var2="1"/>
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@repack_kernel_confirm=Install Kernel?}</text>
 			</text>
 
 			<text style="text_m">
 				<condition var1="tw_repack_kernel" var2="0"/>
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@repack_ramdisk_confirm=Install Recovery?}</text>
 			</text>
 
@@ -4740,7 +4740,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fm_sel_file=Select a File or Folder}</text>
 			</text>
 
@@ -4797,7 +4797,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fm_choose_act=Choose Action}</text>
 			</text>
 
@@ -4948,7 +4948,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fm_sel_dest=Select Destination Folder}</text>
 			</text>
 
@@ -4994,7 +4994,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fm_rename_hdr=Rename} %tw_fm_type%</text>
 			</text>
 
@@ -5049,7 +5049,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fm_rename_hdr=Rename} %tw_fm_type%</text>
 			</text>
 
@@ -5104,7 +5104,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fm_set_perms_hdr=Set Permissions}</text>
 			</text>
 
@@ -5158,7 +5158,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@confirm_action=Confirm Action}</text>
 			</text>
 
@@ -5212,7 +5212,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>%tw_fm_text1%</text>
 			</text>
 
@@ -5273,7 +5273,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@decrypt_data_hdr=Decrypt Data}</text>
 			</text>
 
@@ -5336,7 +5336,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@decrypt_data_hdr=Decrypt Data}</text>
 			</text>
 
@@ -5412,7 +5412,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@decrypt_data_hdr=Decrypt Data}</text>
 			</text>
 
@@ -5475,7 +5475,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@decrypt_data_trying=Trying Decryption}</text>
 			</text>
 
@@ -5519,7 +5519,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@refresh_sizes_btn=Refresh Sizes}</text>
 			</text>
 
@@ -5723,7 +5723,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@adb_sideload_hdr=ADB Sideload}</text>
 			</text>
 
@@ -5774,7 +5774,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@fix_contexts_hdr=Fix Contexts}</text>
 			</text>
 
@@ -6067,7 +6067,7 @@
 			</text>
 
 			<text style="text_m">
-				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<placement x="%col1_x_sub%" y="%row4_header_y%"/>
 				<text>{@change_twrp_folder_btn=Change TWRP folder}</text>
 			</text>
 
