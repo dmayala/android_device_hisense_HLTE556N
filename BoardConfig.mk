@@ -323,3 +323,9 @@ RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
 # The old hang symptom, for reference:
 #   Using additional fstab for decryption /etc/additional.fstab   <- last log line
 #   recovery <pid> futex_wait_queue_me                            <- blocked
+
+# Battery percentage for the status bar. Without this TWRP asks the Android
+# health HAL (not running in recovery) and tw_battery stays empty, so the
+# theme shows no battery or time (measured 2026-10-14). Must be set
+# explicitly: TW_CUSTOM_BATTERY_PATH sets it too late in Android.mk.
+TW_USE_LEGACY_BATTERY_SERVICES := true
