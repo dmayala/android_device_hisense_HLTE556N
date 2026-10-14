@@ -94,6 +94,22 @@ your use, delete it and extract your own from your device's `recovery_b` — the
 backend probes for it at runtime and minui falls back to DRM when it is absent,
 so the build succeeds either way. It just will not render on this panel.
 
+### E Ink extras (branch `eink-ux`, with the recovery fork's `eink-ux`)
+
+- **E Ink button** (the key that sends `EV_KEY 0x2fe` on `gpio-keys`): one
+  full GC16 redraw of the current screen, to clear ghosting.
+- **Power off** (Reboot > Power Off, or `twrp reboot poweroff`): TWRP draws
+  `recovery/root/system/etc/hmct_epd_poweroff.png` with the full waveform,
+  waits for the panel update to finish, and only then powers off, so the
+  glass keeps that image instead of the last TWRP screen. Delete the PNG to
+  turn this off. A plain `adb reboot -p` bypasses TWRP and is not covered.
+  The PNG is the stock "DEVICE POWERED OFF" screen (Hisense's artwork, taken
+  from the device and converted to 8-bit grey), on the same footing as the
+  prebuilt below.
+- No faster waveform: the library's only short (10-frame) path reads a table
+  that does not fit its index, so ordinary updates keep the stock 38-frame
+  partial GC16.
+
 Do not re-investigate the EPD sysfs nodes, the waveform, the DSI-to-DPI bridge,
 or ADF — all were measured against live stock and excluded. The
 `tc358767 ret=-107` error is benign; Android logs it constantly while rendering
