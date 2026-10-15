@@ -96,6 +96,16 @@
 			<font resource="font_m" spacing="%fileselector_spacing%" color="%text_color%" highlightcolor="%fileselector_highlight_font_color%"/>
 		</style>
 
+		<style name="fileselector_nohdr">
+			<highlight color="%fileselector_highlight_color%"/>
+			<fastscroll linecolor="%fileselector_linecolor%" rectcolor="%accent_color%" w="%fastscroll_w%" linew="%fastscroll_linew%" rectw="%fastscroll_rectw%" recth="%fastscroll_recth%"/>
+			<separator color="%fileselector_linecolor%" height="%fileselector_separatorheight%"/>
+			<sort name="tw_gui_sort_order"/>
+			<icon folder="folder" file="file"/>
+			<background color="%background_color%"/>
+			<font resource="font_m" spacing="%fileselector_spacing%" color="%text_color%" highlightcolor="%fileselector_highlight_font_color%"/>
+		</style>
+
 		<style name="listbox">
 			<highlight color="%fileselector_highlight_color%"/>
 			<header background="%background_color%" textcolor="%accent_color%" separatorcolor="%accent_color%" separatorheight="%fileselector_separatorheight%"/>
@@ -446,7 +456,7 @@
 				<placement x="614" y="188"/>
 				<image resource="chip_off_166"/>
 				<font resource="font_chip" color="%text_color%"/>
-				<text>{@storage=Storage}</text>
+				<text>Storage</text>
 				<actions>
 					<action function="set">tw_back=install</action>
 					<action function="overlay">select_storage</action>
@@ -464,9 +474,9 @@
 				<placement x="44" y="348"/>
 			</image>
 
-			<fileselector>
+			<fileselector style="fileselector_nohdr">
 				<condition var1="tw_selectimage" var2="0"/>
-				<placement x="48" y="352" w="728" h="992"/>
+				<placement x="48" y="380" w="728" h="936"/>
 				<filter extn=".zip;.ozip;.ZIP;.OZIP" folders="1" files="1"/>
 				<prfxfilter prfx="Magisk-;Magisk.apk;app-release.apk;app-debug.apk" folders="1" files="1"/>
 				<path name="tw_zip_location" default="/sdcard"/>
@@ -474,9 +484,9 @@
 				<selection name="tw_file"/>
 			</fileselector>
 
-			<fileselector>
+			<fileselector style="fileselector_nohdr">
 				<condition var1="tw_selectimage" var2="1"/>
-				<placement x="48" y="352" w="728" h="992"/>
+				<placement x="48" y="380" w="728" h="936"/>
 				<filter extn=".img" folders="1" files="1"/>
 				<path name="tw_zip_location" default="/sdcard"/>
 				<data name="tw_filename"/>

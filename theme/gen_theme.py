@@ -535,7 +535,7 @@ def status_bar():
              '\t\t\t\t</conditions>\n')
     s += (f'\t\t\t<text color="%text_color%">\n{bat}\t\t\t\t<font resource="font_status"/>\n'
           f'\t\t\t\t<placement x="{W - 36}" y="{y}" placement="1"/>\n'
-          f'\t\t\t\t<text>%tw_battery% · %tw_time%</text>\n\t\t\t</text>\n\n')
+          f'\t\t\t\t<text>%tw_time% · %tw_battery%</text>\n\t\t\t</text>\n\n')
     s += (f'\t\t\t<text color="%text_color%">\n{nobat}\t\t\t\t<font resource="font_status"/>\n'
           f'\t\t\t\t<placement x="{W - 36}" y="{y}" placement="1"/>\n'
           f'\t\t\t\t<text>%tw_time%</text>\n\t\t\t</text>\n\n')
@@ -846,6 +846,10 @@ def styles():
                bg, '<font resource="fixed" spacing="3" color="%text_color%"/>') +
             st("fileselector", hl, hdr, fs, sep, '<sort name="tw_gui_sort_order"/>',
                '<icon folder="folder" file="file"/>', bg, lf) +
+            # Install's list has no title: a <header> always takes a row (scrolllist.cpp),
+            # so it gets a style without one instead of an empty band
+            st("fileselector_nohdr", hl, fs, sep, '<sort name="tw_gui_sort_order"/>',
+               '<icon folder="folder" file="file"/>', bg, lf) +
             st("listbox", hl, hdr, fs, sep, '<icon selected="radio_true" unselected="radio_false"/>', bg, lf) +
             st("scrolllist", bg, '<font resource="font_m" spacing="%fileselector_spacing%" color="%text_color%"/>', fs) +
             st("partitionlist", hl, hdr, fs, dims, '<icon selected="checkbox_true" unselected="checkbox_false"/>', sep, bg, pf) +
@@ -969,12 +973,12 @@ def page_install():
     p += button(ioff, xi, cy, acts(("set", "tw_selectimage=1"), ("page", "install")), cond=sel0,
                 label="{@image=Image}", font="font_chip")
     p += button(soff, W - INDENT - ws, cy, acts(("set", "tw_back=install"), ("overlay", "select_storage")),
-                label="{@storage=Storage}", font="font_chip")
+                label="Storage", font="font_chip")
     p += text("%tw_zip_location%", "font_xs", 52, 316, color="%text_muted_color%")
     ly, lh = 348, 1000
     frame("frame_list", CONTENT_W, lh)
     p += image("frame_list", INDENT, ly)
-    fsel = '''			<fileselector>
+    fsel = '''			<fileselector style="fileselector_nohdr">
 {cond}				<placement x="{x}" y="{y}" w="{w}" h="{h}"/>
 				<filter extn="{extn}" folders="1" files="1"/>
 {prfx}				<path name="tw_zip_location" default="/sdcard"/>
@@ -986,7 +990,9 @@ def page_install():
     for sel, extn, prfx in ((sel0, ".zip;.ozip;.ZIP;.OZIP",
                              '\t\t\t\t<prfxfilter prfx="Magisk-;Magisk.apk;app-release.apk;app-debug.apk" folders="1" files="1"/>\n'),
                             (sel1, ".img", "")):
-        p += fsel.format(cond=sel, x=INDENT + SW, y=ly + SW, w=CONTENT_W - 2 * SW, h=lh - 2 * SW,
+        # inset by the frame's corner radius top and bottom: the list paints a square
+        # background that would otherwise cut the rounded corners (phone, 2026-10-15)
+        p += fsel.format(cond=sel, x=INDENT + SW, y=ly + 32, w=CONTENT_W - 2 * SW, h=lh - 64,
                          extn=extn, prfx=prfx)
     # static hint in the slider's place (the swipe happens on the next page)
     p += image("slider_hint", INDENT, SLIDER_CY - 64)

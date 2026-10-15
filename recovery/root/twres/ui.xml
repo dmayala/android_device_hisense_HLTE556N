@@ -312,7 +312,7 @@
 				</conditions>
 				<font resource="font_status"/>
 				<placement x="788" y="%row1_header_y%" placement="1"/>
-				<text>%tw_battery% · %tw_time%</text>
+				<text>%tw_time% · %tw_battery%</text>
 			</text>
 
 			<text color="%text_color%">
@@ -411,7 +411,7 @@
 				</conditions>
 				<font resource="font_status"/>
 				<placement x="788" y="%row1_header_y%" placement="1"/>
-				<text>%tw_battery% · %tw_time%</text>
+				<text>%tw_time% · %tw_battery%</text>
 			</text>
 
 			<text color="%text_color%">

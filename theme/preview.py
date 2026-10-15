@@ -23,7 +23,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TW = os.path.join(os.path.dirname(HERE), "recovery", "root", "twres")
 
 MOCK = {
-    "tw_version": "3.7.1_12-0", "tw_cpu_temp": "37", "tw_battery": "96% ", "tw_time": "11:39",
+    "tw_version": "3.7.1_12-0", "tw_cpu_temp": "37", "tw_battery": "96%", "tw_time": "11:39",
     "tw_no_cpu_temp": "0", "tw_no_battery_percent": "0", "tw_simulate_actions": "0", "tw_busy": "0",
     "tw_is_decrypted": "1", "tw_is_encrypted": "0", "tw_has_boot_slots": "1", "tw_active_slot": "A",
     "tw_storage_display_name": "Internal Storage", "tw_storage_free_size": "221184",
@@ -96,6 +96,28 @@ class Theme:
         s = re.sub(r"\{@[^=}]+=([^}]*)\}", lambda m: m.group(1), s)
         s = re.sub(r"\{@([^}]+)\}", lambda m: m.group(1), s)
         return s
+
+    def gui_text(self, s):
+        """<text> content, expanded exactly like TWRP's gui_parse_text (gui/gui.cpp):
+        one left-to-right pass that resumes INSIDE an inserted value, so a value
+        ending in '%' (tw_battery is "100%") opens a bogus variable. "%%" is '%'."""
+        s = re.sub(r"\{@[^=}]+=([^}]*)\}", lambda m: m.group(1), s or "")
+        s = re.sub(r"\{@([^}]+)\}", lambda m: m.group(1), s)
+        pos = 0
+        while True:
+            nxt = s.find("%", pos)
+            if nxt < 0:
+                return s
+            end = s.find("%", nxt + 1)
+            if end < 0:
+                return s
+            var = s[nxt + 1:end]
+            s = s[:nxt] + s[end + 1:]
+            if nxt + 1 == end:
+                s = s[:nxt] + "%" + s[nxt:]
+            elif var in self.vars:
+                s = s[:nxt] + self.vars[var] + s[nxt:]
+            pos = nxt + 1
 
     def num(self, s, default=0):
         if s is None:
@@ -243,7 +265,7 @@ class Renderer:
     def r_text(self, el, st):
         x, y, _, _, pl = self.place(el, st)
         font, col = self.font_of(el, st)
-        s = self.th.val(el.find("text").text or "")
+        s = self.th.gui_text(el.find("text").text or "")
         self.text_at(s, font, x, y, col, pl)
 
     def r_button(self, el, st):
@@ -268,7 +290,7 @@ class Renderer:
         tn = el.find("text")
         if tn is not None and tn.text:
             font, col = self.font_of(el, st)
-            s = self.th.val(tn.text)
+            s = self.th.gui_text(tn.text)
             p = child(el, st, "placement")
             if p is not None and p.get("textplacement") == "6":
                 mh = self.th.fonts[font][1]
@@ -284,7 +306,7 @@ class Renderer:
         self.paste(res, x, y)
         font, col = self.font_of(el, st)
         mh = self.th.fonts[font][1]
-        self.text_at(self.th.val(el.find("text").text or ""), font, x + img.width + 5, y + img.height / 2 - mh / 2, col)
+        self.text_at(self.th.gui_text(el.find("text").text or ""), font, x + img.width + 5, y + img.height / 2 - mh / 2, col)
 
     def r_slider(self, el, st):
         x, y, _, _, pl = self.place(el, st)
@@ -296,7 +318,7 @@ class Renderer:
         touch = self.th.images[res.get("touch")]
         self.paste(res.get("touch"), x, y + (base.height - touch.height) // 2)
         font, col = self.font_of(el, st)
-        self.text_at(self.th.val(el.find("text").text or ""), font, x + base.width / 2,
+        self.text_at(self.th.gui_text(el.find("text").text or ""), font, x + base.width / 2,
                      y + base.height / 2, col, 4)
 
     def r_progressbar(self, el, st):
@@ -381,7 +403,7 @@ class Renderer:
         x, y, w, _, _ = self.place(el, st)
         font, col = self.font_of(el, st)
         pil, mh, base = self.th.fonts[font]
-        self.text_at(self.th.val(el.find("text").text or ""), font, x, y, col)
+        self.text_at(self.th.gui_text(el.find("text").text or ""), font, x, y, col)
         ly = y + mh + 44
         self.d.rectangle((x, ly - 2, x + w, ly + 1), fill=rgba("#111111"))
         self.paste("handle", x + int(w * 0.6) - 28, ly - 44)
