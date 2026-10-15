@@ -329,3 +329,15 @@ RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
 # theme shows no battery or time (measured 2026-10-14). Must be set
 # explicitly: TW_CUSTOM_BATTERY_PATH sets it too late in Android.mk.
 TW_USE_LEGACY_BATTERY_SERVICES := true
+
+# Clock. The PM6125 RTC is not writable from Android here; it ticks from 1970
+# and time_daemon keeps the wall-clock offset in ms in /data/vendor/time/ats_2
+# (and /persist/time). Measured 2026-10-14 in Android: date +%s 1792030122,
+# rtc0 since_epoch 5610487, ats_2 = 1786419636010 (RTC + ats/1000 = date).
+# TWRP applies that offset only with QCOM_RTC_FIX, which Android.mk enables
+# for a list of older msm platforms that does not include bengal, so TWRP
+# showed the raw RTC (1970-03-06) as the time. Read by Android.mk (recovery
+# module LOCAL_CFLAGS), needs no Soong export. No TW_QCOM_ATS_OFFSET: the
+# offset is per phone (a constant would be wrong on any other A9). If /data
+# cannot be read (not decrypted) the clock stays at the RTC, as before.
+TARGET_RECOVERY_QCOM_RTC_FIX := true

@@ -34,7 +34,6 @@
 		<image name="btn_half" filename="btn_half"/>
 		<image name="btn_half_filled" filename="btn_half_filled"/>
 		<image name="card_home" filename="card_home"/>
-		<image name="card_info" filename="card_info"/>
 		<image name="checkbox_false" filename="checkbox_false" retainaspect="1"/>
 		<image name="checkbox_true" filename="checkbox_true" retainaspect="1"/>
 		<image name="chip_off_120" filename="chip_off_120"/>
@@ -123,6 +122,7 @@
 		<variable name="content_width" value="736"/>
 		<variable name="content_overlay_width" value="648"/>
 		<variable name="dialog_height" value="594"/>
+		<variable name="dialog_list_y" value="480"/>
 		<variable name="back_button_x" value="199"/>
 		<variable name="console_button_x" value="625"/>
 		<variable name="indent" value="44"/>
@@ -269,6 +269,9 @@
 		<variable name="input_line_width" value="4"/>
 		<variable name="console_height" value="810"/>
 		<variable name="console_terminal_height" value="842"/>
+		<variable name="terminal_x" value="44"/>
+		<variable name="terminal_y" value="102"/>
+		<variable name="terminal_w" value="736"/>
 		<variable name="dialog_button_x" value="522"/>
 		<variable name="pattern_x" value="96"/>
 		<variable name="pattern_dot_dia" value="26"/>

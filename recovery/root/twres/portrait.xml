@@ -135,7 +135,7 @@
 
 		<style name="partitionlist_storage">
 			<highlight color="%fileselector_highlight_color%"/>
-			<placement x="%col1_x_left%" y="%row5_y%" w="%content_overlay_width%" h="%partitionlist_storage_height%"/>
+			<placement x="%col1_x_left%" y="%dialog_list_y%" w="%content_overlay_width%" h="%partitionlist_storage_height%"/>
 			<header background="%background_color%" textcolor="%accent_color%" separatorcolor="%accent_color%" separatorheight="%fileselector_separatorheight%"/>
 			<fastscroll linecolor="%fileselector_linecolor%" rectcolor="%accent_color%" w="%fastscroll_w%" linew="%fastscroll_linew%" rectw="%fastscroll_rectw%" recth="%fastscroll_recth%"/>
 			<dimensions lineh="%slidervalue_lineh%" linepadding="%slidervalue_padding%" sliderw="%slidervalue_sliderw%" sliderh="%slidervalue_sliderh%"/>
@@ -3599,34 +3599,6 @@
 				<text>{@rb_edl_btn=EDL}</text>
 			</text>
 
-			<image>
-				<image resource="card_info"/>
-				<placement x="44" y="844"/>
-			</image>
-
-			<image>
-				<image resource="info"/>
-				<placement x="76" y="872"/>
-			</image>
-
-			<text color="%text_color%">
-				<font resource="font_xs"/>
-				<placement x="144" y="874"/>
-				<text>Power Off leaves the “Device powered off” picture</text>
-			</text>
-
-			<text color="%text_color%">
-				<font resource="font_xs"/>
-				<placement x="144" y="912"/>
-				<text>on the screen. With a cable plugged in, the charger</text>
-			</text>
-
-			<text color="%text_color%">
-				<font resource="font_xs"/>
-				<placement x="144" y="950"/>
-				<text>screen replaces it.</text>
-			</text>
-
 			<action>
 				<touch key="back"/>
 				<action function="page">main</action>
@@ -5561,12 +5533,12 @@
 
 			<terminal>
 				<condition var1="tw_hide_kb" var2="0"/>
-				<placement x="0" y="%row3_header_y%" w="%screen_width%" h="%console_terminal_height%"/>
+				<placement x="%terminal_x%" y="%terminal_y%" w="%terminal_w%" h="%console_terminal_height%"/>
 			</terminal>
 
 			<terminal>
 				<condition var1="tw_hide_kb" var2="1"/>
-				<placement x="0" y="%row3_header_y%" w="%screen_width%" h="%slideout_height%"/>
+				<placement x="%terminal_x%" y="%terminal_y%" w="%terminal_w%" h="%slideout_height%"/>
 			</terminal>
 
 			<template name="keyboardterminaltemplate"/>
@@ -5956,7 +5928,7 @@
 			</image>
 
 			<listbox>
-				<placement x="%col1_x_left%" y="%row5_y%" w="%content_overlay_width%" h="%partitionlist_storage_height%"/>
+				<placement x="%col1_x_left%" y="%dialog_list_y%" w="%content_overlay_width%" h="%partitionlist_storage_height%"/>
 				<text>{@select_language=Select Language:}</text>
 				<icon selected="radio_true" unselected="radio_false" />
 				<data name="tw_language" />

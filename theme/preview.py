@@ -348,6 +348,12 @@ class Renderer:
         font = child(el, st, "font")
         fname = font.get("resource")
         pil, mh, base = self.th.fonts[fname]
+        # scrolllist.cpp Render(): the list paints its background (and the header's) over its whole
+        # placement first, so anything drawn earlier underneath it is erased on the phone
+        bgn = child(el, st, "background")
+        bg = self.color(bgn.get("color"), "#000000") if bgn is not None else rgba("#000000")
+        if w and h:
+            self.d.rectangle((x, y, x + w - 1, y + h - 1), fill=bg)
         sep = child(el, st, "separator")
         sep_h = self.th.num(sep.get("height")) if sep is not None else 0
         sep_c = self.color(sep.get("color")) if sep is not None else None

@@ -396,6 +396,7 @@ def variables():
     add("content_width", CONTENT_W)
     add("content_overlay_width", W - 4 * INDENT)
     add("dialog_height", 11 * ROW)
+    add("dialog_list_y", row(5) + 24)        # below the frame stroke, inside its corner radius
     add("back_button_x", NAV_X[0])
     add("console_button_x", NAV_X[2])
     add("indent", INDENT)
@@ -509,6 +510,9 @@ def variables():
     add("input_line_width", SW)
     add("console_height", 15 * ROW)
     add("console_terminal_height", KB_TERM_Y - ty("font_l", TITLE_CY) - 8)
+    add("terminal_x", INDENT)                 # clear of the glass's rounded edge
+    add("terminal_y", ty("font_l", TITLE_CY))
+    add("terminal_w", CONTENT_W)
     add("dialog_button_x", W - INDENT - 24 - 234)
     add("pattern_x", 96)
     add("pattern_dot_dia", 26)
@@ -1086,17 +1090,7 @@ def page_reboot():
         p += button("rtile_" + k, x, y, a, cond=cond)
         p += text(label, "font_label", x + 117, y + 180, placement=5, cond=cond)
 
-    msg = ("Power Off leaves the “Device powered off” picture on the screen. "
-           "With a cable plugged in, the charger screen replaces it.")
-    lines = wrap(msg, "font_xs", W - INDENT - 32 - 144)
-    card_y = 844
-    lh = 38
-    card_h = 28 + 28 + len(lines) * lh
-    frame("card_info", CONTENT_W, card_h)
-    p += image("card_info", INDENT, card_y)
-    p += image("info", 76, card_y + 28)
-    for i, ln in enumerate(lines):
-        p += text(esc(ln), "font_xs", 144, card_y + 28 + 19 + i * lh)
+    # no power-off info card: the user asked for it to go (2026-10-15); the feature stays
     p += nav_keys_main() + "\t\t</page>\n"
     return p
 
@@ -1205,6 +1199,18 @@ def portrait_xml(stock):
     s = s.replace(dlg, dlg + '\n' + image("frame_dialog", "%indent%", "%row5_y%").rstrip("\n") + "\n")
     if n < 2:
         sys.exit("dialog fills not found")
+    # The dialog lists (storage, language) paint their own white background over their whole
+    # placement (scrolllist.cpp), which started on the frame's top stroke at row5_y and erased
+    # it between the corner arcs. Start them below the stroke and inside the corner radius.
+    lst = 'y="%row5_y%" w="%content_overlay_width%" h="%partitionlist_storage_height%"'
+    if s.count(lst) != 2:
+        sys.exit("dialog list placements not found")
+    s = s.replace(lst, lst.replace("%row5_y%", "%dialog_list_y%"))
+    # Terminal: full-width at x 0 put the first column under the glass's rounded edge
+    term = 'x="0" y="%row3_header_y%" w="%screen_width%"'
+    if s.count(term) != 2:
+        sys.exit("terminal placements not found")
+    s = s.replace(term, 'x="%terminal_x%" y="%terminal_y%" w="%terminal_w%"')
     # Settings > Screen: the E Ink page-refresh switch, below the brightness slider
     anchor = '\t\t\t<slidervalue>\n\t\t\t\t<condition var1="tw_has_brightnesss_file" var2="1"/>'
     if anchor not in s:
