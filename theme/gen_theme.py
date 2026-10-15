@@ -1211,6 +1211,14 @@ def portrait_xml(stock):
     if s.count(term) != 2:
         sys.exit("terminal placements not found")
     s = s.replace(term, 'x="%terminal_x%" y="%terminal_y%" w="%terminal_w%"')
+    # Settings > Time Zone: save right away. TWRP writes .twrps only on a GUI reboot (tw_reboot), so a
+    # zone set and then left with adb reboot or a long Power press was lost (measured 2026-10-15:
+    # the user's Pacific choice came back as the default CST6CDT).
+    tz = '<action function="setguitimezone"/>'
+    if s.count(tz) != 1:
+        sys.exit("settings_timezone button not found")
+    s = s.replace(tz, '<actions>\n\t\t\t\t\t<action function="setguitimezone"/>\n'
+                      '\t\t\t\t\t<action function="savesettings"/>\n\t\t\t\t</actions>')
     # Settings > Screen: the E Ink page-refresh switch, below the brightness slider
     anchor = '\t\t\t<slidervalue>\n\t\t\t\t<condition var1="tw_has_brightnesss_file" var2="1"/>'
     if anchor not in s:

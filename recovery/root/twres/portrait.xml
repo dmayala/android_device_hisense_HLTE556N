@@ -3942,7 +3942,10 @@
 				<font resource="font_m" color="%text_button_color%"/>
 				<text>{@set_tz_btn=Set Time Zone}</text>
 				<image resource="main_button_half_height"/>
-				<action function="setguitimezone"/>
+				<actions>
+					<action function="setguitimezone"/>
+					<action function="savesettings"/>
+				</actions>
 			</button>
 
 			<action>
