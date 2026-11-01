@@ -205,6 +205,15 @@ TW_INCLUDE_REPACKTOOLS := true
 TW_INCLUDE_FASTBOOTD := true
 TW_INCLUDE_NTFS_3G := true
 
+# bootctl has no recovery_available variant in system/extras on android-12.1.
+# TWRP's prebuilt/Android.mk consumes this list directly in Make, requires the
+# named system module and relink.sh copies it into recovery/root/system/bin.
+# Do not rely on PRODUCT_PACKAGES alone (system output only), or on the
+# unrelated TW_INCLUDE_LPDUMP conditional that otherwise includes bootctl.
+# Its HIDL @1.0/@1.1/@1.2, libhidlbase and libutils libraries are already in
+# that Makefile's unconditional RECOVERY_LIBRARY_SOURCE_FILES list.
+TW_RECOVERY_ADDITIONAL_RELINK_BINARY_FILES += $(TARGET_OUT_EXECUTABLES)/bootctl
+
 # Frontlight [MEASURED from stock init.recovery.qcom.rc, which writes 200 to
 # this node on init]
 TW_BRIGHTNESS_PATH := /sys/class/backlight/panel0-backlight/brightness
