@@ -213,6 +213,10 @@ TW_INCLUDE_NTFS_3G := true
 # Its HIDL @1.0/@1.1/@1.2, libhidlbase and libutils libraries are already in
 # that Makefile's unconditional RECOVERY_LIBRARY_SOURCE_FILES list.
 TW_RECOVERY_ADDITIONAL_RELINK_BINARY_FILES += $(TARGET_OUT_EXECUTABLES)/bootctl
+# dmctl: the LOS 24 installer reads live device-mapper tables in recovery
+# (TWRP ships no dmsetup). Needs libbase/liblog/liblp/libcrypto_utils, all
+# already in the recovery ramdisk (checked in build 41344377139).
+TW_RECOVERY_ADDITIONAL_RELINK_BINARY_FILES += $(TARGET_OUT_EXECUTABLES)/dmctl
 
 # Frontlight [MEASURED from stock init.recovery.qcom.rc, which writes 200 to
 # this node on init]
