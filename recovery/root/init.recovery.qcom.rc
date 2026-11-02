@@ -31,6 +31,7 @@ on init
     # Ramdisk capability marker; installers check this BEFORE requesting a reset.
     setprop ro.twrp.a9.los24_vendor 1
     setprop ro.twrp.a9.crypto self
+    setprop ro.twrp.a9.usb_deadline 180
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
@@ -90,8 +91,9 @@ service vendor.qseecomd /system/bin/a9-crypto/qseecomd
     setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
 
 on property:fstab.additional=1
-    # Synchronous prep, then launch only when firmware and VINTF are ready.
-    exec_start a9-crypto-vintf
+    # crypto_ready orders the HALs; do not freeze init's USB/reboot action
+    # queue while a firmware mount or VINTF bind is in progress.
+    start a9-crypto-vintf
 
 on property:twrp.a9.crypto_ready=1
     start vendor.qseecomd
@@ -100,6 +102,25 @@ on property:twrp.a9.crypto_ready=1
     start keystore2
 
 service a9-crypto-vintf /system/bin/sh /system/bin/a9-crypto-vintf.sh
+    disabled
+    oneshot
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+# Independent of recovery, fstab, crypto and the default class. Once USB has
+# enumerated this one-shot exits, so later cable removal never reboots TWRP.
+on early-init
+    # Fastboot skips fstab.additional entirely. Install our view BEFORE
+    # hwservicemanager starts on init: the generated ramdisk fragments declare
+    # Health2.1 but its services are disabled without lazy-start interfaces.
+    # R45's valid manifest otherwise makes fastbootd wait for health before USB.
+    # This binds only ramdisk paths; normal recovery repeats the bind after
+    # mounting the slot's vendor, which can cover this initial mount.
+    mount none /system/etc/a9-recovery-vintf /vendor/etc/vintf bind
+    start a9-usb-deadline
+
+service a9-usb-deadline /system/bin/sh /system/bin/a9-usb-deadline.sh
     disabled
     oneshot
     user root
