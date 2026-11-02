@@ -24,6 +24,7 @@ search = [Path('system/a9-crypto/lib64'), Path('system/lib64')]
 # loads its passthrough implementation dynamically rather than via DT_NEEDED.
 queue = [Path(x['ramdisk']) for x in inventory['files']]
 queue += [Path('system/lib64/liba9_recovery_crypto_wait.so')]
+queue += [Path('system/lib64/liba9_crypto_diagnostics.so')]
 seen = {}
 while queue:
     path = queue.pop(0)
@@ -56,7 +57,8 @@ for entry in inventory['files']:
         assert entry['ramdisk'].startswith('system/bin/a9-crypto/'), f'outside fs_config executable rule: {entry["ramdisk"]}'
 # Also check the prep interpreter/script and existing preloads in the packed
 # ramdisk. A root-only os.access(X_OK) check does not require all execute bits.
-for path in ('system/bin/sh', 'system/bin/linker64', 'system/bin/a9-crypto-vintf.sh'):
+for path in ('system/bin/sh', 'system/bin/linker64', 'system/bin/a9-crypto-vintf.sh',
+             'system/bin/a9-crypto-snapshot.sh'):
     assert stat.S_IMODE((root / path).stat().st_mode) == 0o755, f'not 0755: {path}'
 rc = (root / 'init.recovery.qcom.rc').read_text()
 assert '/system/a9-crypto/bin/' not in rc, 'stale crypto service path'

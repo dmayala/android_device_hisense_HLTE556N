@@ -9,11 +9,23 @@
 #include <sys/system_properties.h>
 
 #include <cstring>
+#include <cstdio>
 
 namespace {
 // One budget per process, shared by repeated lookups. This limits waiting for
 // absent services, not a transaction to a service which has already registered.
 constexpr int kWaitSeconds = 30;
+
+void trace(const char* stage, const char* service) {
+    timespec now{};
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    int fd = open("/tmp/a9-crypto-wait.log", O_WRONLY | O_CREAT | O_APPEND | O_CLOEXEC | O_NOFOLLOW, 0600);
+    if (fd >= 0) {
+        dprintf(fd, "[%lld.%03ld pid=%d] %s %s\n", static_cast<long long>(now.tv_sec),
+                now.tv_nsec / 1000000, getpid(), stage, service);
+        close(fd);
+    }
+}
 
 bool expired() {
     static const time_t deadline = [] {
@@ -44,14 +56,16 @@ bool cryptoInterface(const std::string& descriptor) {
 }
 
 AIBinder* waitForKeystore(const char* instance) {
+    trace("lookup-enter", instance);
     do {
         // checkService returns an owned strong reference, as waitForService does.
         AIBinder* service = AServiceManager_checkService(instance);
-        if (service) return service;
+        if (service) { trace("lookup-acquired", instance); return service; }
         if (expired()) break;
         usleep(100000);
     } while (true);
     timeout();
+    trace("lookup-timeout", instance);
     return nullptr;
 }
 
@@ -77,13 +91,15 @@ sp<::android::hidl::base::V1_0::IBase> getRawServiceInternal(
     if (!real) return nullptr;
     if (!retry || getStub || !cryptoInterface(descriptor))
         return real(descriptor, instance, retry, getStub);
+    trace("hidl-lookup-enter", descriptor.c_str());
     do {
         auto service = real(descriptor, instance, false, false);
-        if (service != nullptr) return service;
+        if (service != nullptr) { trace("hidl-lookup-acquired", descriptor.c_str()); return service; }
         if (expired()) break;
         usleep(100000);
     } while (true);
     timeout();
+    trace("hidl-lookup-timeout", descriptor.c_str());
     return nullptr;
 }
 }  // namespace android::hardware::details
