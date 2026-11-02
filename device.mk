@@ -58,8 +58,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libhmct_epd
 
-# Bound absent crypto-service lookups instead of stalling startup forever.
-PRODUCT_PACKAGES += liba9_recovery_crypto_wait
+# liba9_recovery_crypto_wait (bounds absent crypto-service lookups) ships as a
+# plain file in recovery/root/system/lib64/, like libion: a Soong module here sits
+# in this tree's unexported namespace and CI's ALLOW_MISSING_DEPENDENCIES skipped
+# it silently (build 41365758009 had the preloads but no library). Source:
+# recovery/crypto_wait.cpp; build commands in the R40 report.
 
 # BCB-clearing hook for "Reboot System" from the TWRP UI.
 #

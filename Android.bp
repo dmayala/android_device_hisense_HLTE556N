@@ -7,13 +7,3 @@
 
 soong_namespace {
 }
-
-// Loaded only by recovery and its keystore2, never by Android or vendor HALs.
-cc_library_shared {
-    name: "liba9_recovery_crypto_wait",
-    recovery: true,
-    srcs: ["recovery/crypto_wait.cpp"],
-    shared_libs: ["libbinder_ndk", "libhidlbase", "libutils", "libdl"],
-    cpp_std: "c++17",
-    cflags: ["-Wall", "-Wextra", "-Werror"],
-}
