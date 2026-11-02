@@ -1,0 +1,692 @@
+{
+  "result": "PASS",
+  "scope": "static ELF closure, inventory and packaging; no TEE/decrypt execution",
+  "nodes": {
+    "system/a9-crypto/bin/qseecomd": {
+      "sha256": "5be26351f46f1e129fa5c780bbb49817bd91f38d58cadc07152620ccc4fc1f51",
+      "needed": [
+        "system/lib64/libcutils.so",
+        "system/lib64/libutils.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/a9-crypto/lib64/libdrmfs.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/bin/hw/android.hardware.keymaster@4.1-service-qti": {
+      "sha256": "13a698f8e6509f795fa44877b6b4d1757b6e2685b7b259f7fd42bdaae7021661",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libbase.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libhardware.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/android.hardware.keymaster@4.0.so",
+        "system/lib64/android.hardware.keymaster@4.1.so",
+        "system/a9-crypto/lib64/libqtikeymaster4.so",
+        "system/lib64/libcrypto.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/bin/hw/android.hardware.gatekeeper@1.0-service-qti": {
+      "sha256": "9d7d2274c8849c46259f1a82eeb644149690b0137b9a9a5f04d349a7e35d832a",
+      "needed": [
+        "system/lib64/android.hardware.gatekeeper@1.0.so",
+        "system/lib64/libhardware.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/libutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/librpmb.so": {
+      "sha256": "364139c927b091df2a2c9b3b6ff02330be60ba3fdb17be9f88c3b8a66632b02b",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libssd.so": {
+      "sha256": "8db9eedf1984723ac9811e476478edbebaf4c9f5af734b8e832bfb8a8faec982",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libdiag.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libdrmfs.so": {
+      "sha256": "ec6c598181c0de0f8e776b5c1560a62c1c48a971c0a6c137f6b9bc6f780e6ec0",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libdiag.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/libxml2.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libdrmtime.so": {
+      "sha256": "8d88f6d0984bc0c5fdea4d2b2e95f8955ca61f59defd31ff9e26b635a90a5990",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libdiag.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/a9-crypto/lib64/libtime_genoff.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libGPreqcancel.so": {
+      "sha256": "9602fc69424bf0b77d20796278fdadfc33103ccf09ca48992d3d630f340be3fe",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libdiag.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/a9-crypto/lib64/libGPreqcancel_svc.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libqisl.so": {
+      "sha256": "f25dd475c18d085a24f80a181823009e58d96079c95d8c05bc3642ae9cdd1e9b",
+      "needed": [
+        "system/lib64/libcutils.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libops.so": {
+      "sha256": "e21f454122610da4292a505573c46bf222bbb6bcb375fac8566454e15c060214",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libdrm.so",
+        "system/lib64/libhidlbase.so",
+        "system/a9-crypto/lib64/libdisplayconfig.qti.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libsecureui.so": {
+      "sha256": "f1a6bef6f3a247cd26a36102739a56985a3b461e276335751981ae4e2a1404ec",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/liblog.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/a9-crypto/lib64/libStDrvInt.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/libbinder.so",
+        "system/a9-crypto/lib64/libdisplayconfig.qti.so",
+        "system/lib64/libion.so",
+        "system/a9-crypto/lib64/libsecureui_svcsock.so",
+        "system/a9-crypto/lib64/vendor.display.config@1.0.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so": {
+      "sha256": "7cce2abe8ba7908d9ee66546885a5b4989cfb929b399bba0a7deb4565265f27c",
+      "needed": [
+        "system/lib64/android.hardware.gatekeeper@1.0.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/libutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libkeymasterdeviceutils.so",
+        "system/a9-crypto/lib64/libqcbor.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libQSEEComAPI.so": {
+      "sha256": "2f70ad2dd4d3137f18df34022021bc3bf9533ac2161de0e1afc6e7d338d82094",
+      "needed": [
+        "system/lib64/libion.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libqtikeymaster4.so": {
+      "sha256": "beb923d3e09579bbf54360a55fa19af3b4a8ee5be9446d9798199a909d46b274",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libcrypto.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libkeymasterdeviceutils.so",
+        "system/a9-crypto/lib64/libkeymasterutils.so",
+        "system/lib64/libbase.so",
+        "system/a9-crypto/lib64/libqcbor.so",
+        "system/lib64/android.hardware.keymaster@4.0.so",
+        "system/lib64/android.hardware.keymaster@4.1.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libdiag.so": {
+      "sha256": "03b9e071bb1323cab3a43910f7706ba0bf5ff2563ffd7bdaf99175f6d94e69ec",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libc.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libtime_genoff.so": {
+      "sha256": "e63b8d3b7107391ff62945a9c4e9df0deaaa546ae0dbdd6399319f0443bb278b",
+      "needed": [
+        "system/lib64/libc.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libGPreqcancel_svc.so": {
+      "sha256": "ecbace27e0afef056878811d59a8ae33a8a4e877ca8a97d86fb26a905d0d5aa9",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libdrm.so": {
+      "sha256": "e8c718c29327ec9b213295be1ee0d2c56688ac489b09a600571dd1144bd12481",
+      "needed": [
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libdisplayconfig.qti.so": {
+      "sha256": "00309f680861f0c76372a6608cde0b9dbf92867c8e31a092288c8cfc71b72635",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/libutils.so",
+        "system/a9-crypto/lib64/vendor.display.config@2.0.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libStDrvInt.so": {
+      "sha256": "e7aa592922fe4b518c913cbd6b92e6f84567e578e5b52ad9a626ed8b2f377b14",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libsecureui_svcsock.so": {
+      "sha256": "761fe83858954e64fee0ee725b08d0b0fd79a1347dac60fff9bf7608bd09a530",
+      "needed": [
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libhidlbase.so",
+        "system/a9-crypto/lib64/vendor.qti.hardware.tui_comm@1.0.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/vendor.display.config@1.0.so": {
+      "sha256": "49bc428bd1d4c3a520d2bc3f1faa62a36a11e9d08416569c0201c248259cc091",
+      "needed": [
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libkeymasterdeviceutils.so": {
+      "sha256": "1231b993bde4c65982a7c8a22233e7063152596580e5b7d7f318917e8262fffd",
+      "needed": [
+        "system/lib64/libion.so",
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libcrypto.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libqcbor.so": {
+      "sha256": "992222d255a46694c18683e87c10d9d914307a1bb11de3936045e5f2cea84104",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/libkeymasterutils.so": {
+      "sha256": "b3e21fa062b14502fe4694ab88046326db6debbbbaafe42a5f1096b0872df80c",
+      "needed": [
+        "system/lib64/libcutils.so",
+        "system/a9-crypto/lib64/libQSEEComAPI.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libcrypto.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/vendor.display.config@2.0.so": {
+      "sha256": "e143899a1d867a9161e99451e15958c991363155e6e78e19d6604af290f49c1c",
+      "needed": [
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/vendor.qti.hardware.tui_comm@1.0.so": {
+      "sha256": "74e2247c31c0e7cb16de53641d621fe30a121478479394f7645e911ee5dbbf49",
+      "needed": [
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/a9-crypto/lib64/liba9_crypto_paths.so": {
+      "sha256": "73db11d9da080b5f6fbc90cc1f72ebe88ffe0c73e4848994a885b445f1963441",
+      "needed": [
+        "system/lib64/libdl.so",
+        "system/lib64/libm.so",
+        "system/lib64/libc.so"
+      ]
+    },
+    "system/lib64/liba9_recovery_crypto_wait.so": {
+      "sha256": "87d47fc92d378928362377df5d98c06fd2f6c7674b039a0358f906ebff93b1e1",
+      "needed": [
+        "system/lib64/libbinder_ndk.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libdl.so",
+        "system/lib64/libm.so",
+        "system/lib64/libc.so"
+      ]
+    },
+    "system/lib64/libcutils.so": {
+      "sha256": "7770f1ab72dfa693f16779e9fdfc0337beb79cd7a15e9bccb97f96dd0f40bbe0",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libbase.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libutils.so": {
+      "sha256": "382d6f541397c254f79719f8328e9f709f45cda6f94019bf22f540e12ede4aea",
+      "needed": [
+        "system/lib64/libcutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libprocessgroup.so",
+        "system/lib64/libvndksupport.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/liblog.so": {
+      "sha256": "8ea50e446444ec65e13c18536aa2f828ab90ebbbdb0002bfbcdf90193519b7c1",
+      "needed": [
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libc++.so": {
+      "sha256": "c38a57de7b44bccc27bdffd58de033edcc5584c116fc303ec62e80416e9b2d7a",
+      "needed": [
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libc.so": {
+      "sha256": "6c884c1a02bddfaa68d2a08407699b9f3d658d75d80ee3bae5aa138e9aa59dd3",
+      "needed": [
+        "system/lib64/ld-android.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libm.so": {
+      "sha256": "6742458cf2beffb0a00d46a35cc89f6abdb6ed5e4b1655ae4a2ea09cdf4dffca",
+      "needed": [
+        "system/lib64/libc.so"
+      ]
+    },
+    "system/lib64/libdl.so": {
+      "sha256": "cab54511650fc5f56e35b0b3fc345a7d88bf293b94ba5ef3ee384eac43d56924",
+      "needed": [
+        "system/lib64/ld-android.so"
+      ]
+    },
+    "system/bin/linker64": {
+      "sha256": "56e54d7db46f1971c2f363c3040d5f5e4b11c2e262e5242cdfd596665ff551cd",
+      "needed": []
+    },
+    "system/lib64/libbase.so": {
+      "sha256": "a079a1f5529e2ffe84496ff812d8f80ccce3e0a12e9deff1a386503372272989",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libhardware.so": {
+      "sha256": "64491acbd4cf3ed40b957772afe6325f930d1e4a9b985de130b68fa4f8438a76",
+      "needed": [
+        "system/lib64/libcutils.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libvndksupport.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libhidlbase.so": {
+      "sha256": "58aef03d8e21cfc1297d44c934da6f81af3b0da73eade16954256f68dad86c3e",
+      "needed": [
+        "system/lib64/libbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libvndksupport.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/android.hardware.keymaster@4.0.so": {
+      "sha256": "c70d047ec8d48ca27559d03bb4b82705ac3c9a1b75e9a94f48cb3dd1e0b854b5",
+      "needed": [
+        "system/lib64/android.hardware.keymaster@3.0.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/android.hardware.keymaster@4.1.so": {
+      "sha256": "2f9116533f3b9eb7361cfc1024ad37605abd8c5efdcfe53a563fca83d2620fd5",
+      "needed": [
+        "system/lib64/android.hardware.keymaster@3.0.so",
+        "system/lib64/android.hardware.keymaster@4.0.so",
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libcrypto.so": {
+      "sha256": "e837416e9c0359747ba4b4fb4b1794e27a1e0a7ddaf66b631d48b7dca84602a1",
+      "needed": [
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/android.hardware.gatekeeper@1.0.so": {
+      "sha256": "2bc716ff5ec9d4f8d39d8d3c4f58a6450d0de5334106a4ce03627d0ac91f6009",
+      "needed": [
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libxml2.so": {
+      "sha256": "fe301d85f648fdd39b76e9be622a13b4546c3635ff8cc95a1a78fcc8df80b93b",
+      "needed": [
+        "system/lib64/libandroidicu.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libbinder.so": {
+      "sha256": "1dd8ecb349e8ebd951cafeba420e15a73031aaea0566dadf6dde21e06919b56c",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libion.so": {
+      "sha256": "6e1aa91baa92c90fb10d500ff3855e630174cb59039373707b7b29cc7fc67069",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libbinder_ndk.so": {
+      "sha256": "7d8d507344f25419afc56dcc91fc2025277bc15c23f1b4a5764971f554cc277d",
+      "needed": [
+        "system/lib64/libandroid_runtime_lazy.so",
+        "system/lib64/libbase.so",
+        "system/lib64/libbinder.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libprocessgroup.so": {
+      "sha256": "958c9025cf35f5d18b61dc8a4570114d5a90b2e2ea2f37ccb75a5a6901941558",
+      "needed": [
+        "system/lib64/libbase.so",
+        "system/lib64/libcgrouprc.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libvndksupport.so": {
+      "sha256": "33a5f3aebcab09df866695a7a7c04b987670009b2bc9d3a559613e9e527b357f",
+      "needed": [
+        "system/lib64/libdl_android.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/ld-android.so": {
+      "sha256": "3be279f8ebd077f25477f57ec0b6ded9e072e4cb6d0e5002ed2d2a233bfec843",
+      "needed": []
+    },
+    "system/lib64/android.hardware.keymaster@3.0.so": {
+      "sha256": "a3f81999489643a3f0443951ebf3d5db447b1a68c809d848505fab3bc80eb5dc",
+      "needed": [
+        "system/lib64/libhidlbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libcutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libandroidicu.so": {
+      "sha256": "fffde40391d6d3d70b922f98ac9998f805c20eb6c2daf2853a63e6de4e098dc3",
+      "needed": [
+        "system/lib64/libbase.so",
+        "system/lib64/libicuuc.so",
+        "system/lib64/libicui18n.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libandroid_runtime_lazy.so": {
+      "sha256": "726f32a7d4b1c0fa45a52879a084f55bc4bf768ed37106b23ff11f08b53b62bf",
+      "needed": [
+        "system/lib64/liblog.so",
+        "system/lib64/libutils.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libcgrouprc.so": {
+      "sha256": "b6c0317d0acc41275d517b3ba56be0d26cdf7203930771213056f500ff07c788",
+      "needed": [
+        "system/lib64/libbase.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libdl_android.so": {
+      "sha256": "e73c64cf355ce1bfa04019945d95dcd9b2de9df00cad8c548c1cbbcb0ded41d0",
+      "needed": [
+        "system/lib64/ld-android.so"
+      ]
+    },
+    "system/lib64/libicuuc.so": {
+      "sha256": "49eab7ba0efdc237b3c2a3b398115b9a931bfb4ac4405607dcb4b3fd7b41db28",
+      "needed": [
+        "system/lib64/libbase.so",
+        "system/lib64/liblog.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    },
+    "system/lib64/libicui18n.so": {
+      "sha256": "36af1927c5ceab7df3f586c38ffcad704616bf31e582ce2e945f1b3ad16d56fa",
+      "needed": [
+        "system/lib64/libicuuc.so",
+        "system/lib64/libc++.so",
+        "system/lib64/libc.so",
+        "system/lib64/libm.so",
+        "system/lib64/libdl.so"
+      ]
+    }
+  }
+}

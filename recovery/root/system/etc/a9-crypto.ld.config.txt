@@ -1,0 +1,6 @@
+# Only used by /system/a9-crypto services, never by recovery/bootctl/fastbootd.
+dir.crypto = /system/a9-crypto
+[crypto]
+namespace.default.isolated = true
+namespace.default.search.paths = /system/a9-crypto/lib64:/system/lib64
+namespace.default.permitted.paths = /system/a9-crypto:/system/lib64

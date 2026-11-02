@@ -30,6 +30,7 @@ on init
     setprop sys.usb.configfs 1
     # Ramdisk capability marker; installers check this BEFORE requesting a reset.
     setprop ro.twrp.a9.los24_vendor 1
+    setprop ro.twrp.a9.crypto self
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
@@ -51,73 +52,48 @@ on fs
 on init
     setprop keymaster_ver 4.1
 
-# Vendor keymaster + gatekeeper HALs, needed to decrypt /data.
-#
-# WHY: /data is FBE v2 with dm-default-key metadata encryption and
-# hardware-wrapped keys. The keys live in the TEE; vold must ask the vendor
-# keymaster HAL to unwrap them. TWRP does not parse /vendor/etc/init/*.rc, so
-# these services are invisible to it and nothing ever starts them -- keystore2
-# then crash-loops (init.svc.keystore2=restarting) and the metadata decrypt
-# quietly does nothing.
-#
-# Definitions copied verbatim from the device's own
-# /vendor/etc/init/android.hardware.{keymaster@4.1,gatekeeper@1.0}-service-qti.rc,
-# with seclabel added (TWRP runs everything as u:r:recovery:s0).
-#
-# TRIGGER: TWRP sets fstab.additional=1 immediately after mounting /vendor and
-# copying its fstab, which is before Decrypt_Data runs -- exactly the window we
-# need. /vendor cannot be mounted from init here because it is a logical
-# partition inside super and the dm devices are set up by TWRP, not init.
-# Once started the HAL keeps /vendor busy, which is harmless: TWRP logs
-# "Failed to unmount '/vendor' (Device or resource busy)" and carries on.
-
-service vendor.keymaster-4-1 /vendor/bin/hw/android.hardware.keymaster@4.1-service-qti
+# Self-contained stock crypto, independent of the mounted slot's vendor DSOs.
+# Keep these disabled until TWRP has copied its selected (or fallback) fstab.
+# The gatekeeper passthrough implementation is also available in ramdisk
+# /system/lib64/hw; the isolated linker namespace refuses slot-vendor modules.
+service vendor.keymaster-4-1 /system/a9-crypto/bin/hw/android.hardware.keymaster@4.1-service-qti
     class early_hal
+    disabled
     user root
     group root system drmrpc
     seclabel u:r:recovery:s0
-    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
+    setenv LD_LIBRARY_PATH /system/a9-crypto/lib64:/system/lib64
+    setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
+    setenv LD_PRELOAD /system/a9-crypto/lib64/liba9_crypto_paths.so
 
-service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti
+service gatekeeper-1-0 /system/a9-crypto/bin/hw/android.hardware.gatekeeper@1.0-service-qti
     class early_hal
+    disabled
     user root
     group root system
     seclabel u:r:recovery:s0
-    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
+    setenv LD_LIBRARY_PATH /system/a9-crypto/lib64:/system/lib64
+    setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
+    setenv LD_PRELOAD /system/a9-crypto/lib64/liba9_crypto_paths.so
 
-service vendor.keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service-qti
+# qseecomd dlopens its listener libraries before it publishes
+# vendor.sys.listeners.registered. Include those modules as well as DT_NEEDED.
+service vendor.qseecomd /system/a9-crypto/bin/qseecomd
     class early_hal
-    user root
-    group root system drmrpc
-    seclabel u:r:recovery:s0
-    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
-
-# ROOT CAUSE FIX (2026-08-10)
-#
-# The QTI keymaster HAL does NOT register with hwservicemanager until the
-# QSEECom TZ listeners are up. libkeymasterdeviceutils.so calls
-#   android::base::WaitForPropertyCreation("vendor.sys.listeners.registered")
-# with NO timeout, inside CreateKeymasterDevice(), i.e. BEFORE
-# registerAsService(). Without qseecomd that property is never created, so the
-# HAL sits single-threaded in a nanosleep poll loop forever and every
-# getService() on the client side blocks forever.
-#
-# Stock does this in /vendor/etc/init/qseecomd.rc + init.target.rc:
-#   on init: wait /dev/qseecom; start vendor.qseecomd; start keymaster-4-0
-service vendor.qseecomd /vendor/bin/qseecomd
-    class early_hal
+    disabled
     user root
     group root
     seclabel u:r:recovery:s0
-    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
+    setenv LD_LIBRARY_PATH /system/a9-crypto/lib64:/system/lib64
+    setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
 
 on property:fstab.additional=1
-    # /vendor has now been mounted. Overlay LOS24's too-new VINTF schema before
-    # any HAL asks recovery's older hwservicemanager for its transport.
+    # Synchronous prep, then launch only when firmware and VINTF are ready.
     exec_start a9-crypto-vintf
+
+on property:twrp.a9.crypto_ready=1
     start vendor.qseecomd
     start vendor.keymaster-4-1
-    start vendor.keymaster-4-0
     start gatekeeper-1-0
 
 service a9-crypto-vintf /system/bin/sh /system/bin/a9-crypto-vintf.sh
@@ -126,15 +102,6 @@ service a9-crypto-vintf /system/bin/sh /system/bin/a9-crypto-vintf.sh
     user root
     group root
     seclabel u:r:recovery:s0
-
-# LOS24 keeps the original TEE libraries under a9-wrapped-stock. The directory
-# is absent on stock, so the same search path falls through to /vendor/lib64.
-# Never put /system/lib64 first: qseecomd's retained ICU76 needs newer libc++.
-# Keymaster's direct dependency closure has no ICU. Its registration instead
-# depends on recovery's libvintf, which accepts manifest schema <= 4.0 while
-# LOS24 ships 9.0. The temporary VINTF overlay describes only recovery's HALs.
-# Neither Android's attestation-filesystem shim nor FBE tracing is required to
-# load the HAL in recovery; keep both out of this recovery service environment.
 
 # init.recovery.service.rc was imported before this file. Preserve its socket
 # and label; add only the recovery-local absent-service timeout shim.

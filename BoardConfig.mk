@@ -326,16 +326,11 @@ RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
 # init.svc=restarting, /data cannot decrypt, AND the constant respawning
 # starves the E Ink TCON and corrupts the display.
 
-# NOTE: TW_SKIP_ADDITIONAL_FSTAB must stay OFF.
-#
-# It was added to stop a decrypt that hung TWRP forever. That hang is now fixed
-# at source (qseecomd + the fscrypt session keyring), and the additional fstab
-# is where the crypto config actually comes from -- /etc/twrp.fstab carries no
-# keydirectory=, so skipping the vendor fstab would break decryption entirely.
-#
-# The old hang symptom, for reference:
-#   Using additional fstab for decryption /etc/additional.fstab   <- last log line
-#   recovery <pid> futex_wait_queue_me                            <- blocked
+# Keep TW_SKIP_ADDITIONAL_FSTAB OFF. TWRP's GetFstabPath() searches
+# /odm/etc and /vendor/etc before /system/etc/fstab.<boot suffix>. We ship
+# fallback fstab.default/fstab.qcom with only stock data/metadata entries;
+# this also emits fstab.additional=1 when mainline has no vendor fstab.
+# Stock and LOS vendor crypto flags keep their normal precedence.
 
 # Battery percentage for the status bar. Without this TWRP asks the Android
 # health HAL (not running in recovery) and tw_battery stays empty, so the

@@ -15,16 +15,11 @@
 # Data and metadata
 # /data -- FBE v2 + dm-default-key metadata encryption, hardware-wrapped keys.
 #
-# The crypto flags below are NOT optional decoration. partition.cpp picks the
-# decryption path on `Key_Directory.empty()`: with no keydirectory= flag TWRP
-# takes the legacy FDE branch, calls cryptfs_check_footer(), finds no footer on
-# an FBE device and gives up with
-#   "Could not mount /data and unable to find crypto footer."
-# which is exactly what happened before these flags were added.
-#
-# Values copied verbatim from the device's own /vendor/etc/fstab.default
-# (androidboot.fstab_suffix=default -> the UFS variant, hence
-# inlinecrypt_optimized rather than emmc_optimized).
+# Crypto flags are supplied by the selected Android-format additional fstab,
+# not this TWRP UI-format entry. Stock/LOS vendor fstabs take priority; the
+# ramdisk fstab.default/fstab.qcom supplies stock /data + /metadata flags when
+# the selected slot has no vendor fstab (mainline). Keep keydirectory and
+# wrappedkey_v0 there: an empty Key_Directory selects the legacy FDE path.
 /data               f2fs      /dev/block/bootdevice/by-name/userdata        flags=display="Data";backup=1;wipeingui
 /metadata           ext4      /dev/block/bootdevice/by-name/metadata        flags=display="Metadata";backup=1
 /cache              ext4      /dev/block/bootdevice/by-name/cache           flags=display="Cache";backup=1;wipeingui

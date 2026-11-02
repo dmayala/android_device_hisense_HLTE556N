@@ -1,0 +1,15 @@
+# Recovery's existing namespace is unchanged. Crypto gets no vendor search or
+# permitted path, including for gatekeeper's absolute passthrough dlopen.
+dir.crypto = /system/a9-crypto
+dir.recovery = /system/bin
+
+[crypto]
+namespace.default.isolated = true
+namespace.default.search.paths = /system/a9-crypto/lib64:/system/lib64
+namespace.default.permitted.paths = /system/a9-crypto:/system/lib64
+
+[recovery]
+namespace.default.isolated = false
+namespace.default.search.paths = /system/${LIB}
+namespace.default.asan.search.paths = /data/asan/system/${LIB}
+namespace.default.asan.search.paths += /system/${LIB}
