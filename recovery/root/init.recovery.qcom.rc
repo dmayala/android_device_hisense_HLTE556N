@@ -28,6 +28,8 @@
 on init
     write /sys/class/backlight/panel0-backlight/brightness 200
     setprop sys.usb.configfs 1
+    # Ramdisk capability marker; installers check this BEFORE requesting a reset.
+    setprop ro.twrp.a9.los24_vendor 1
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
@@ -74,25 +76,21 @@ service vendor.keymaster-4-1 /vendor/bin/hw/android.hardware.keymaster@4.1-servi
     user root
     group root system drmrpc
     seclabel u:r:recovery:s0
+    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
 
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti
     class early_hal
     user root
     group root system
     seclabel u:r:recovery:s0
-
-on property:fstab.additional=1
-    start vendor.keymaster-4-1
-    start gatekeeper-1-0
+    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
 
 service vendor.keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service-qti
     class early_hal
     user root
     group root system drmrpc
     seclabel u:r:recovery:s0
-
-on property:fstab.additional=1
-    start vendor.keymaster-4-0
+    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
 
 # ROOT CAUSE FIX (2026-08-10)
 #
@@ -111,9 +109,40 @@ service vendor.qseecomd /vendor/bin/qseecomd
     user root
     group root
     seclabel u:r:recovery:s0
+    setenv LD_LIBRARY_PATH /vendor/lib64/a9-wrapped-stock:/vendor/lib64
 
 on property:fstab.additional=1
+    # /vendor has now been mounted. Overlay LOS24's too-new VINTF schema before
+    # any HAL asks recovery's older hwservicemanager for its transport.
+    exec_start a9-crypto-vintf
     start vendor.qseecomd
+    start vendor.keymaster-4-1
+    start vendor.keymaster-4-0
+    start gatekeeper-1-0
+
+service a9-crypto-vintf /system/bin/sh /system/bin/a9-crypto-vintf.sh
+    disabled
+    oneshot
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+# LOS24 keeps the original TEE libraries under a9-wrapped-stock. The directory
+# is absent on stock, so the same search path falls through to /vendor/lib64.
+# Never put /system/lib64 first: qseecomd's retained ICU76 needs newer libc++.
+# Keymaster's direct dependency closure has no ICU. Its registration instead
+# depends on recovery's libvintf, which accepts manifest schema <= 4.0 while
+# LOS24 ships 9.0. The temporary VINTF overlay describes only recovery's HALs.
+# Neither Android's attestation-filesystem shim nor FBE tracing is required to
+# load the HAL in recovery; keep both out of this recovery service environment.
+
+# init.recovery.service.rc was imported before this file. Preserve its socket
+# and label; add only the recovery-local absent-service timeout shim.
+service recovery /system/bin/recovery
+    override
+    socket recovery stream 422 system system
+    seclabel u:r:recovery:s0
+    setenv LD_PRELOAD /system/lib64/liba9_recovery_crypto_wait.so
 
 # TWRP's ueventd never reads /vendor/ueventd.rc, so the TZ device nodes keep
 # their default 0600 root:root instead of stock's:

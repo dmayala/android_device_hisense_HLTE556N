@@ -194,6 +194,19 @@
 		</page>
 
 		<page name="main2">
+			<action>
+				<conditions>
+				<condition var1="property.twrp.a9.crypto_timeout" var2="1"/>
+				<condition var1="tw_is_decrypted" var2="0"/>
+					<condition var1="tw_is_encrypted" var2="1"/>
+					<condition var1="tw_a9_crypto_mtp_attempted" op="!=" var2="1"/>
+				</conditions>
+				<actions>
+					<action function="set">tw_a9_crypto_mtp_attempted=1</action>
+					<action function="startmtp"/>
+				</actions>
+			</action>
+
 			<template name="page_home"/>
 
 			<image>
@@ -5240,6 +5253,17 @@
 		</page>
 
 		<page name="decrypt">
+			<action>
+				<conditions>
+				<condition var1="property.twrp.a9.crypto_timeout" var2="1"/>
+				<condition var1="tw_is_decrypted" var2="0"/>
+				</conditions>
+				<actions>
+					<action function="set">tw_page_done=1</action>
+					<action function="page">main</action>
+				</actions>
+			</action>
+
 			<template name="page"/>
 
 			<action>
@@ -5313,6 +5337,17 @@
 		</page>
 
 		<page name="decrypt_pattern">
+			<action>
+				<conditions>
+				<condition var1="property.twrp.a9.crypto_timeout" var2="1"/>
+				<condition var1="tw_is_decrypted" var2="0"/>
+				</conditions>
+				<actions>
+					<action function="set">tw_page_done=1</action>
+					<action function="page">main</action>
+				</actions>
+			</action>
+
 			<template name="page"/>
 
 			<text style="text_l">
@@ -5389,6 +5424,17 @@
 		</page>
 
 		<page name="decrypt_pin">
+			<action>
+				<conditions>
+				<condition var1="property.twrp.a9.crypto_timeout" var2="1"/>
+				<condition var1="tw_is_decrypted" var2="0"/>
+				</conditions>
+				<actions>
+					<action function="set">tw_page_done=1</action>
+					<action function="page">main</action>
+				</actions>
+			</action>
+
 			<template name="page"/>
 
 			<text style="text_l">

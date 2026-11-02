@@ -58,6 +58,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libhmct_epd
 
+# Bound absent crypto-service lookups instead of stalling startup forever.
+PRODUCT_PACKAGES += liba9_recovery_crypto_wait
+
 # BCB-clearing hook for "Reboot System" from the TWRP UI.
 #
 # TWRP's rb_system path calls /system/bin/rebootsystem.sh but never clears the
