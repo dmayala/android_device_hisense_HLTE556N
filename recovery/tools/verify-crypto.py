@@ -7,9 +7,9 @@ Run on the CI ramdisk too: a source-tree check cannot prove CI packaged an ELF.
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -30,6 +30,7 @@ while queue:
         continue
     f = root / path
     assert f.is_file(), f'missing ELF: {path}'
+    assert stat.S_IMODE(f.stat().st_mode) & 0o444 == 0o444, f'not readable: {path}'
     text = subprocess.check_output([args.readelf, '-h', '-d', '-l', str(f)], text=True)
     assert 'AArch64' in text, f'not ARM64: {path}'
     # RPATH/RUNPATH would add an unchecked search path.
@@ -50,7 +51,22 @@ while queue:
 for entry in inventory['files']:
     assert seen[entry['ramdisk']]['sha256'] == entry['sha256'], f'blob changed: {entry["ramdisk"]}'
     if '/bin/' in entry['ramdisk']:
-        assert os.access(root / entry['ramdisk'], os.X_OK), f'not executable: {entry["ramdisk"]}'
+        assert stat.S_IMODE((root / entry['ramdisk']).stat().st_mode) == 0o755, f'not 0755: {entry["ramdisk"]}'
+        assert entry['ramdisk'].startswith('system/bin/a9-crypto/'), f'outside fs_config executable rule: {entry["ramdisk"]}'
+# Also check the prep interpreter/script and existing preloads in the packed
+# ramdisk. A root-only os.access(X_OK) check does not require all execute bits.
+for path in ('system/bin/sh', 'system/bin/linker64', 'system/bin/a9-crypto-vintf.sh'):
+    assert stat.S_IMODE((root / path).stat().st_mode) == 0o755, f'not 0755: {path}'
+rc = (root / 'init.recovery.qcom.rc').read_text()
+assert '/system/a9-crypto/bin/' not in rc, 'stale crypto service path'
+for entry in inventory['files']:
+    if '/bin/' in entry['ramdisk']:
+        assert f"/{entry['ramdisk']}\n" in rc, f'service path missing: {entry["ramdisk"]}'
+for path in ('system/etc/ld.config.txt', 'system/etc/a9-crypto.ld.config.txt'):
+    selectors = (root / path).read_text().split('[crypto]', 1)[0]
+    assert 'dir.crypto = /system/bin/a9-crypto\n' in selectors, f'wrong crypto selector: {path}'
+    if 'dir.recovery' in selectors:
+        assert selectors.index('dir.crypto') < selectors.index('dir.recovery'), f'crypto selector must precede recovery: {path}'
 impl = 'android.hardware.gatekeeper@1.0-impl-qti.so'
 assert (root / 'system/lib64/hw' / impl).resolve() == (root / 'system/a9-crypto/lib64/hw' / impl).resolve()
 for name in ('fstab.default', 'fstab.qcom'):

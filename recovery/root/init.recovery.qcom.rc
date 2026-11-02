@@ -56,7 +56,9 @@ on init
 # Keep these disabled until TWRP has copied its selected (or fallback) fstab.
 # The gatekeeper passthrough implementation is also available in ramdisk
 # /system/lib64/hw; the isolated linker namespace refuses slot-vendor modules.
-service vendor.keymaster-4-1 /system/a9-crypto/bin/hw/android.hardware.keymaster@4.1-service-qti
+# Keep executables under system/bin: mkbootfs fs_config assigns other paths
+# 0644 regardless of their git executable bit. Libraries stay in a9-crypto/lib64.
+service vendor.keymaster-4-1 /system/bin/a9-crypto/hw/android.hardware.keymaster@4.1-service-qti
     class early_hal
     disabled
     user root
@@ -66,7 +68,7 @@ service vendor.keymaster-4-1 /system/a9-crypto/bin/hw/android.hardware.keymaster
     setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
     setenv LD_PRELOAD /system/a9-crypto/lib64/liba9_crypto_paths.so
 
-service gatekeeper-1-0 /system/a9-crypto/bin/hw/android.hardware.gatekeeper@1.0-service-qti
+service gatekeeper-1-0 /system/bin/a9-crypto/hw/android.hardware.gatekeeper@1.0-service-qti
     class early_hal
     disabled
     user root
@@ -78,7 +80,7 @@ service gatekeeper-1-0 /system/a9-crypto/bin/hw/android.hardware.gatekeeper@1.0-
 
 # qseecomd dlopens its listener libraries before it publishes
 # vendor.sys.listeners.registered. Include those modules as well as DT_NEEDED.
-service vendor.qseecomd /system/a9-crypto/bin/qseecomd
+service vendor.qseecomd /system/bin/a9-crypto/qseecomd
     class early_hal
     disabled
     user root

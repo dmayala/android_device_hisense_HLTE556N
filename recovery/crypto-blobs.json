@@ -6,21 +6,21 @@
   "files": [
     {
       "source": "/vendor/bin/qseecomd",
-      "ramdisk": "system/a9-crypto/bin/qseecomd",
+      "ramdisk": "system/bin/a9-crypto/qseecomd",
       "sha256": "5be26351f46f1e129fa5c780bbb49817bd91f38d58cadc07152620ccc4fc1f51",
       "bytes": 20672,
       "license": "stock vendor blob; redistribution rights unverified"
     },
     {
       "source": "/vendor/bin/hw/android.hardware.keymaster@4.1-service-qti",
-      "ramdisk": "system/a9-crypto/bin/hw/android.hardware.keymaster@4.1-service-qti",
+      "ramdisk": "system/bin/a9-crypto/hw/android.hardware.keymaster@4.1-service-qti",
       "sha256": "13a698f8e6509f795fa44877b6b4d1757b6e2685b7b259f7fd42bdaae7021661",
       "bytes": 11864,
       "license": "stock vendor blob; redistribution rights unverified"
     },
     {
       "source": "/vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti",
-      "ramdisk": "system/a9-crypto/bin/hw/android.hardware.gatekeeper@1.0-service-qti",
+      "ramdisk": "system/bin/a9-crypto/hw/android.hardware.gatekeeper@1.0-service-qti",
       "sha256": "9d7d2274c8849c46259f1a82eeb644149690b0137b9a9a5f04d349a7e35d832a",
       "bytes": 11496,
       "license": "stock vendor blob; redistribution rights unverified"

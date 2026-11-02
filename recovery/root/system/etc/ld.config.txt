@@ -1,6 +1,6 @@
 # Recovery's existing namespace is unchanged. Crypto gets no vendor search or
 # permitted path, including for gatekeeper's absolute passthrough dlopen.
-dir.crypto = /system/a9-crypto
+dir.crypto = /system/bin/a9-crypto
 dir.recovery = /system/bin
 
 [crypto]
