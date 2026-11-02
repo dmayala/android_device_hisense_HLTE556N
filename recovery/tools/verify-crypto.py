@@ -25,6 +25,7 @@ search = [Path('system/a9-crypto/lib64'), Path('system/lib64')]
 queue = [Path(x['ramdisk']) for x in inventory['files']]
 queue += [Path('system/lib64/liba9_recovery_crypto_wait.so')]
 queue += [Path('system/lib64/liba9_crypto_diagnostics.so')]
+queue += [Path('system/bin/a9-crypto/launcher')]
 seen = {}
 while queue:
     path = queue.pop(0)
@@ -58,7 +59,8 @@ for entry in inventory['files']:
 # Also check the prep interpreter/script and existing preloads in the packed
 # ramdisk. A root-only os.access(X_OK) check does not require all execute bits.
 for path in ('system/bin/sh', 'system/bin/linker64', 'system/bin/a9-crypto-vintf.sh',
-             'system/bin/a9-crypto-snapshot.sh'):
+             'system/bin/a9-crypto-snapshot.sh', 'system/bin/a9-crypto-rom-props.sh',
+             'system/bin/resetprop', 'system/bin/a9-crypto/launcher'):
     assert stat.S_IMODE((root / path).stat().st_mode) == 0o755, f'not 0755: {path}'
 rc = (root / 'init.recovery.qcom.rc').read_text()
 assert '/system/a9-crypto/bin/' not in rc, 'stale crypto service path'
@@ -87,6 +89,9 @@ keystore_rc = (root / 'system/etc/init/keystore2.rc').read_text()
 assert '    disabled\n' in keystore_rc and 'on late-init' not in keystore_rc
 ready_action = rc.split('on property:twrp.a9.crypto_ready=1\n', 1)[1].split('\nservice ', 1)[0]
 assert '    start keystore2\n' in ready_action
+assert 'namespace mnt' in keystore_rc
+assert '/system/bin/a9-crypto/launcher keystore2 /system/bin/keystore2 /tmp/misc/keystore' in keystore_rc
+assert '/system/bin/sh /system/bin/a9-crypto-rom-props.sh || exit 1' in (root / 'system/bin/a9-crypto-vintf.sh').read_text()
 for name in ('fstab.default', 'fstab.qcom'):
     rows = [x.split() for x in (root / 'system/etc' / name).read_text().splitlines() if x and not x.startswith('#')]
     assert {r[1] for r in rows} == {'/metadata', '/data'}

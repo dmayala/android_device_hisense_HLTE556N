@@ -8,14 +8,15 @@ snapshot() {
     read uptime rest < /proc/uptime
     echo "=== R49 uptime=$uptime ==="
     for prop in fstab.additional twrp.a9.crypto_ready twrp.a9.crypto_vintf \
-        twrp.a9.crypto_firmware vendor.sys.listeners.registered \
+        twrp.a9.crypto_firmware twrp.a9.crypto_rom_props vendor.sys.listeners.registered \
         init.svc.vendor.qseecomd init.svc.vendor.keymaster-4-1 \
         init.svc.gatekeeper-1-0 init.svc.keystore2 keystore.crash_count \
         twrp.a9.crypto_timeout ro.crypto.fs_crypto_blkdev ro.crypto.metadata.enabled \
         ro.crypto.state ro.crypto.type vold.storage_seed_bound \
         ro.crypto.dm_default_key.options_format.version ro.crypto.set_dun \
         ro.build.version.release ro.build.version.security_patch \
-        ro.vendor.build.version.release ro.vendor.build.security_patch; do
+        ro.vendor.build.version.release ro.vendor.build.security_patch \
+        ro.vendor.build.version.security_patch ro.bootimage.build.version.security_patch; do
         echo "$prop=$(getprop "$prop")"
     done
     # Avoid dmsetup table/targets: these can contain raw encryption keys.

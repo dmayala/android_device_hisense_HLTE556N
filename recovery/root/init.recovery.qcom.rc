@@ -33,6 +33,7 @@ on init
     setprop ro.twrp.a9.crypto self
     setprop ro.twrp.a9.usb_deadline 180
     setprop ro.twrp.a9.crypto_diagnostics r49
+    setprop ro.twrp.a9.rom_props r50
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
@@ -60,22 +61,24 @@ on init
 # /system/lib64/hw; the isolated linker namespace refuses slot-vendor modules.
 # Keep executables under system/bin: mkbootfs fs_config assigns other paths
 # 0644 regardless of their git executable bit. Libraries stay in a9-crypto/lib64.
-service vendor.keymaster-4-1 /system/bin/a9-crypto/hw/android.hardware.keymaster@4.1-service-qti
+service vendor.keymaster-4-1 /system/bin/a9-crypto/launcher keymaster /system/bin/a9-crypto/hw/android.hardware.keymaster@4.1-service-qti
     class early_hal
     disabled
     user root
     group root system drmrpc
     seclabel u:r:recovery:s0
+    namespace mnt
     setenv LD_LIBRARY_PATH /system/a9-crypto/lib64:/system/lib64
     setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
     setenv LD_PRELOAD /system/lib64/liba9_crypto_diagnostics.so:/system/a9-crypto/lib64/liba9_crypto_paths.so
 
-service gatekeeper-1-0 /system/bin/a9-crypto/hw/android.hardware.gatekeeper@1.0-service-qti
+service gatekeeper-1-0 /system/bin/a9-crypto/launcher gatekeeper /system/bin/a9-crypto/hw/android.hardware.gatekeeper@1.0-service-qti
     class early_hal
     disabled
     user root
     group root system
     seclabel u:r:recovery:s0
+    namespace mnt
     setenv LD_LIBRARY_PATH /system/a9-crypto/lib64:/system/lib64
     setenv LD_CONFIG_FILE /system/etc/a9-crypto.ld.config.txt
     setenv LD_PRELOAD /system/lib64/liba9_crypto_diagnostics.so:/system/a9-crypto/lib64/liba9_crypto_paths.so

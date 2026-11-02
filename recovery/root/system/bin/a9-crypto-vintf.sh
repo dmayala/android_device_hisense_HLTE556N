@@ -1,6 +1,7 @@
 #!/system/bin/sh
 # All mounts are RAM views or read-only firmware, never writes to a partition.
 setprop twrp.a9.crypto_ready 0
+/system/bin/sh /system/bin/a9-crypto-rom-props.sh || exit 1
 case "$(getprop ro.boot.slot_suffix)" in
     _a) modem=/dev/block/bootdevice/by-name/modem_a ;;
     _b) modem=/dev/block/bootdevice/by-name/modem_b ;;
