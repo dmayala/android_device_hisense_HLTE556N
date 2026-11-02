@@ -97,6 +97,7 @@ on property:twrp.a9.crypto_ready=1
     start vendor.qseecomd
     start vendor.keymaster-4-1
     start gatekeeper-1-0
+    start keystore2
 
 service a9-crypto-vintf /system/bin/sh /system/bin/a9-crypto-vintf.sh
     disabled

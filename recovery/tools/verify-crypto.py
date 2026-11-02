@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import stat
 import subprocess
+import xml.etree.ElementTree as ET
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--ramdisk', type=Path, required=True)
@@ -69,6 +70,21 @@ for path in ('system/etc/ld.config.txt', 'system/etc/a9-crypto.ld.config.txt'):
         assert selectors.index('dir.crypto') < selectors.index('dir.recovery'), f'crypto selector must precede recovery: {path}'
 impl = 'android.hardware.gatekeeper@1.0-impl-qti.so'
 assert (root / 'system/lib64/hw' / impl).resolve() == (root / 'system/a9-crypto/lib64/hw' / impl).resolve()
+# libvintf rejects multiple versions with the same major in a single HAL.
+# keystore2's VINTF helper dereferences the resulting null manifest.
+manifest_paths = ('system/etc/a9-recovery-vintf/manifest.xml', 'vendor/etc/vintf/manifest.xml')
+assert (root / manifest_paths[0]).read_bytes() == (root / manifest_paths[1]).read_bytes()
+manifest = ET.parse(root / manifest_paths[0]).getroot()
+for hal in manifest.findall('hal'):
+    versions = [v.text for v in hal.findall('version')]
+    majors = [v.split('.')[0] for v in versions]
+    assert len(set(majors)) == len(majors), f'duplicate major: {hal.findtext("name")}'
+    if hal.findtext('name') == 'android.hardware.keymaster':
+        assert versions == ['4.1'], 'declare inherited keymaster 4.0 through 4.1'
+keystore_rc = (root / 'system/etc/init/keystore2.rc').read_text()
+assert '    disabled\n' in keystore_rc and 'on late-init' not in keystore_rc
+ready_action = rc.split('on property:twrp.a9.crypto_ready=1\n', 1)[1].split('\nservice ', 1)[0]
+assert '    start keystore2\n' in ready_action
 for name in ('fstab.default', 'fstab.qcom'):
     rows = [x.split() for x in (root / 'system/etc' / name).read_text().splitlines() if x and not x.startswith('#')]
     assert {r[1] for r in rows} == {'/metadata', '/data'}

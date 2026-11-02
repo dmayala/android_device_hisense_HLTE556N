@@ -196,8 +196,8 @@
     {
       "source": "recovery/crypto_paths.cpp (NDK android31)",
       "ramdisk": "system/a9-crypto/lib64/liba9_crypto_paths.so",
-      "sha256": "73db11d9da080b5f6fbc90cc1f72ebe88ffe0c73e4848994a885b445f1963441",
-      "bytes": 5848,
+      "sha256": "221b7678a2c77baa3faa38cded75d4dd4f28e00f2a92ff7c04ef0dfafeebb343",
+      "bytes": 6536,
       "license": "Apache-2.0, source included"
     }
   ]
